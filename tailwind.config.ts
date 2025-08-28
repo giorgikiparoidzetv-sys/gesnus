@@ -18,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -51,6 +54,20 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				// Custom design tokens
+				tobacco: {
+					dark: 'hsl(var(--tobacco-dark))',
+					medium: 'hsl(var(--tobacco-medium))',
+					light: 'hsl(var(--tobacco-light))',
+				},
+				gold: {
+					primary: 'hsl(var(--gold-primary))',
+					muted: 'hsl(var(--gold-muted))',
+				},
+				cream: {
+					light: 'hsl(var(--cream-light))',
+					medium: 'hsl(var(--cream-medium))',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
