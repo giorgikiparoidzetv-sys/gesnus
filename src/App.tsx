@@ -10,6 +10,9 @@ import ProductPage from "@/pages/ProductPage";
 import AboutPage from "@/pages/AboutPage";
 import ContactPage from "@/pages/ContactPage";
 import NotFound from "./pages/NotFound";
+import AuthPage from "@/pages/AuthPage";
+import DashboardPage from "@/pages/DashboardPage";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +31,15 @@ const App = () => (
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

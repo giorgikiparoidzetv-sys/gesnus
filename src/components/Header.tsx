@@ -3,10 +3,11 @@ import { Search, ShoppingCart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NavLink } from "react-router-dom";
-
+import { useAuth } from "@/hooks/useAuth";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(3); // Placeholder cart count
+  const { user } = useAuth();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -65,6 +66,10 @@ const Header = () => {
             )}
             <span className="hidden sm:inline-block ml-2">Cart</span>
           </Button>
+          {/* Account */}
+          <NavLink to={user ? "/dashboard" : "/auth"} className="hidden md:block">
+            <Button variant="secondary" size="sm">{user ? 'Dashboard' : 'Login'}</Button>
+          </NavLink>
 
           {/* Mobile Menu Button */}
           <Button
