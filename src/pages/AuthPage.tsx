@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { cleanupAuthState, moveAuthKeysToSession } from '@/lib/auth';
+import { cleanupAuthState } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -96,8 +96,8 @@ const AuthPage = () => {
       });
       if (error) throw error;
 
-      // If remember me is false, move tokens to sessionStorage
-      if (!values.remember) moveAuthKeysToSession();
+// Session persistence: always keep Supabase tokens in localStorage to match client storage
+// (Remember me currently not switching storage to avoid logout issues)
 
       if (data.user) {
         toast({ title: 'Welcome back', description: data.user.email || 'Signed in successfully.' });

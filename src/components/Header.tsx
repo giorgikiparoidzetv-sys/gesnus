@@ -39,12 +39,13 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       cleanupAuthState();
-      await supabase.auth.signOut({ scope: 'global' });
+      try { await supabase.auth.signOut({ scope: 'global' }); } catch {}
       toast({
         title: "Logged out",
         description: "You have been successfully logged out",
       });
-      navigate('/');
+      // Full reload to ensure a clean state
+      window.location.href = '/auth';
     } catch (error: any) {
       toast({
         variant: "destructive",
