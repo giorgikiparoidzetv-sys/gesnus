@@ -1,0 +1,29 @@
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
+
+const LanguageSwitcher = () => {
+  const { language, setLanguage } = useTranslation();
+
+  return (
+    <div className="flex items-center space-x-1">
+      <Button
+        variant={language === "ka" ? "default" : "ghost"}
+        size="sm"
+        onClick={() => setLanguage("ka")}
+        className="text-xs px-2 py-1 h-7"
+      >
+        🇬🇪 KA
+      </Button>
+      <Button
+        variant={language === "ru" ? "default" : "ghost"}
+        size="sm"
+        onClick={() => setLanguage("ru")}
+        className="text-xs px-2 py-1 h-7"
+      >
+        🇷🇺 RU
+      </Button>
+    </div>
+  );
+};
+
+export default LanguageSwitcher;

@@ -1,6 +1,8 @@
 import { Star, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCart } from "@/hooks/useCart";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Product {
   id: number;
@@ -19,6 +21,20 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+  const { addToCart } = useCart();
+  const { t } = useTranslation();
+  
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      brand: product.brand || "Premium",
+      strength: product.strength,
+    });
+    onAddToCart?.(product);
+  };
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -74,11 +90,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           {/* Price */}
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-foreground">
-              ${product.price.toFixed(2)}
+              ₾{product.price.toFixed(2)}
             </span>
             {product.originalPrice && (
               <span className="text-sm text-muted-foreground line-through">
-                ${product.originalPrice.toFixed(2)}
+                ₾{product.originalPrice.toFixed(2)}
               </span>
             )}
           </div>
@@ -89,11 +105,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             className="w-full mt-3 transition-smooth"
             onClick={(e) => {
               e.stopPropagation();
-              onAddToCart?.(product);
+              handleAddToCart();
             }}
           >
             <ShoppingCart className="h-3 w-3 mr-2" />
-            Add to Cart
+            {t("product.add_to_cart")}
           </Button>
         </div>
       </CardContent>

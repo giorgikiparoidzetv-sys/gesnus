@@ -1,20 +1,42 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Search, ShoppingCart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
+import { useTranslation } from "@/hooks/useTranslation";
+import LanguageSwitcher from "./LanguageSwitcher";
+import MiniCart from "./MiniCart";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount] = useState(3); // Placeholder cart count
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { user } = useAuth();
+  const { getTotalItems } = useCart();
+  const { t } = useTranslation();
+  const cartRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Shop", path: "/shop" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: t("nav.home"), path: "/" },
+    { name: t("nav.shop"), path: "/shop" },
+    { name: t("nav.about"), path: "/about" },
+    { name: t("nav.contact"), path: "/contact" },
   ];
+
+  // Close cart when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,31 +66,50 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Search and Cart */}
-        <div className="flex items-center space-x-4">
+        {/* Search, Cart and Actions */}
+        <div className="flex items-center space-x-3">
           {/* Search Bar - Hidden on mobile */}
-          <div className="hidden md:flex relative">
+          <div className="hidden lg:flex relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search products..."
-              className="w-64 pl-10"
+              placeholder={t("header.search")}
+              className="w-48 pl-10"
             />
           </div>
 
+          {/* Language Switcher */}
+          <div className="hidden md:block">
+            <LanguageSwitcher />
+          </div>
+
           {/* Cart */}
-          <Button variant="outline" size="sm" className="relative">
-            <ShoppingCart className="h-4 w-4" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-xs font-medium text-primary-foreground flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-            <span className="hidden sm:inline-block ml-2">Cart</span>
-          </Button>
+          <div ref={cartRef} className="relative">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="relative"
+              onClick={() => setIsCartOpen(!isCartOpen)}
+            >
+              <ShoppingCart className="h-4 w-4" />
+              {getTotalItems() > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                >
+                  {getTotalItems()}
+                </Badge>
+              )}
+              <span className="hidden sm:inline-block ml-2">{t("nav.cart")}</span>
+            </Button>
+            <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+          </div>
+
           {/* Account */}
           <NavLink to={user ? "/dashboard" : "/auth"} className="hidden md:block">
-            <Button variant="secondary" size="sm">{user ? 'Dashboard' : 'Login'}</Button>
+            <Button variant="secondary" size="sm">
+              {user ? t("nav.dashboard") : t("nav.login")}
+            </Button>
           </NavLink>
 
           {/* Mobile Menu Button */}
@@ -106,9 +147,27 @@ const Header = () => {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search products..."
+                placeholder={t("header.search")}
                 className="pl-10"
               />
+            </div>
+
+            {/* Mobile Language Switcher */}
+            <div className="pt-2 md:hidden">
+              <LanguageSwitcher />
+            </div>
+
+            {/* Mobile Auth Link */}
+            <div className="pt-2 md:hidden">
+              <NavLink 
+                to={user ? "/dashboard" : "/auth"} 
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
+              >
+                <Button variant="outline" className="w-full">
+                  {user ? t("nav.dashboard") : t("nav.login")}
+                </Button>
+              </NavLink>
             </div>
           </nav>
         </div>
