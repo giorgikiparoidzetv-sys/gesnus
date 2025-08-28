@@ -10,6 +10,8 @@ interface Profile {
   user_id: string;
   email: string;
   full_name: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 const DashboardPage = () => {
@@ -62,11 +64,29 @@ const DashboardPage = () => {
         </header>
 
         <article className="rounded-lg border bg-card p-6">
-          <h2 className="text-lg font-semibold mb-2">Profile</h2>
-          <div className="space-y-1 text-sm">
-            <p><span className="font-medium">Email:</span> {user?.email}</p>
-            <p><span className="font-medium">Full name:</span> {profile?.full_name || '—'}</p>
-            <p><span className="font-medium">User ID:</span> {user?.id}</p>
+          <h2 className="text-lg font-semibold mb-4">Profile Information</h2>
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span className="font-medium text-muted-foreground">Email:</span>
+              <span>{user?.email}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium text-muted-foreground">Full name:</span>
+              <span>{profile?.full_name || '—'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium text-muted-foreground">Member since:</span>
+              <span>
+                {profile?.created_at 
+                  ? new Date(profile.created_at).toLocaleDateString()
+                  : '—'
+                }
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium text-muted-foreground">User ID:</span>
+              <span className="font-mono text-xs">{user?.id}</span>
+            </div>
           </div>
         </article>
 

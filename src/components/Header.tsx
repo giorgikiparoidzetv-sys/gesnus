@@ -1,12 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { NavLink } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart.tsx";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
+import { supabase } from "@/integrations/supabase/client";
+import { cleanupAuthState } from "@/lib/auth";
+import { toast } from "@/hooks/use-toast";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MiniCart from "./MiniCart";
 const Header = () => {
@@ -15,6 +26,7 @@ const Header = () => {
   const { user } = useAuth();
   const { getTotalItems } = useCart();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const cartRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
@@ -23,6 +35,24 @@ const Header = () => {
     { name: t("nav.about"), path: "/about" },
     { name: t("nav.contact"), path: "/contact" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      cleanupAuthState();
+      await supabase.auth.signOut({ scope: 'global' });
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out",
+      });
+      navigate('/');
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Logout failed",
+        description: error?.message || "Please try again",
+      });
+    }
+  };
 
   // Close cart when clicking outside
   useEffect(() => {
@@ -105,12 +135,43 @@ const Header = () => {
             <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
           </div>
 
-          {/* Account */}
-          <NavLink to={user ? "/dashboard" : "/auth"} className="hidden md:block">
-            <Button variant="secondary" size="sm">
-              {user ? t("nav.dashboard") : t("nav.login")}
-            </Button>
-          </NavLink>
+          {/* Account - Desktop */}
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" size="sm" className="hidden md:flex">
+                  <User className="h-4 w-4 mr-2" />
+                  {t("auth.my_account")}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{t("auth.my_account")}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <NavLink to="/dashboard" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>{t("nav.dashboard")}</span>
+                  </NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>{t("auth.logout")}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <NavLink to="/auth" className="hidden md:block">
+              <Button variant="secondary" size="sm">
+                {t("nav.login")}
+              </Button>
+            </NavLink>
+          )}
 
           {/* Mobile Menu Button */}
           <Button
@@ -159,15 +220,44 @@ const Header = () => {
 
             {/* Mobile Auth Link */}
             <div className="pt-2 md:hidden">
-              <NavLink 
-                to={user ? "/dashboard" : "/auth"} 
-                onClick={() => setIsMenuOpen(false)}
-                className="block"
-              >
-                <Button variant="outline" className="w-full">
-                  {user ? t("nav.dashboard") : t("nav.login")}
-                </Button>
-              </NavLink>
+              {user ? (
+                <div className="space-y-2">
+                  <div className="px-3 py-2 text-sm text-muted-foreground">
+                    {user.email}
+                  </div>
+                  <NavLink 
+                    to="/dashboard" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block w-full"
+                  >
+                    <Button variant="outline" className="w-full justify-start">
+                      <User className="mr-2 h-4 w-4" />
+                      {t("nav.dashboard")}
+                    </Button>
+                  </NavLink>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start" 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t("auth.logout")}
+                  </Button>
+                </div>
+              ) : (
+                <NavLink 
+                  to="/auth" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block"
+                >
+                  <Button variant="outline" className="w-full">
+                    {t("nav.login")}
+                  </Button>
+                </NavLink>
+              )}
             </div>
           </nav>
         </div>

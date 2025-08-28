@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      cart_items: {
+        Row: {
+          brand: string
+          created_at: string
+          id: string
+          image: string
+          name: string
+          price: number
+          product_id: string
+          quantity: number
+          strength: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brand: string
+          created_at?: string
+          id?: string
+          image: string
+          name: string
+          price: number
+          product_id: string
+          quantity?: number
+          strength?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brand?: string
+          created_at?: string
+          id?: string
+          image?: string
+          name?: string
+          price?: number
+          product_id?: string
+          quantity?: number
+          strength?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
