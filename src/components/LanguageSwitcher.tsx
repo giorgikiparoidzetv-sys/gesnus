@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useTranslation();

@@ -3,8 +3,8 @@ import { ShoppingCart, Minus, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useCart } from "@/hooks/useCart";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useCart } from "@/hooks/useCart.tsx";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 import { NavLink } from "react-router-dom";
 
 const CartPage = () => {

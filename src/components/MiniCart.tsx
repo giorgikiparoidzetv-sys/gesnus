@@ -2,8 +2,8 @@ import { ShoppingCart, X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "@/hooks/useCart";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useCart } from "@/hooks/useCart.tsx";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 import { NavLink } from "react-router-dom";
 
 interface MiniCartProps {

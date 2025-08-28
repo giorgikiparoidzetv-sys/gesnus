@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useCart } from "@/hooks/useCart";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useCart } from "@/hooks/useCart.tsx";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MiniCart from "./MiniCart";
 const Header = () => {

@@ -17,8 +17,8 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
 import DashboardPage from "@/pages/DashboardPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { CartProvider } from "@/hooks/useCart";
-import { TranslationProvider } from "@/hooks/useTranslation";
+import { CartProvider } from "@/hooks/useCart.tsx";
+import { TranslationProvider } from "@/hooks/useTranslation.tsx";
 
 const queryClient = new QueryClient();
 

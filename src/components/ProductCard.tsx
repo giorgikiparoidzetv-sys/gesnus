@@ -1,8 +1,8 @@
 import { Star, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCart } from "@/hooks/useCart";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useCart } from "@/hooks/useCart.tsx";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 
 interface Product {
   id: number;
