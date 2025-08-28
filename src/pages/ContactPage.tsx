@@ -1,11 +1,27 @@
+import { useState } from "react";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 
 const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
   const contactInfo = [
     {
       icon: Mail,
@@ -35,8 +51,29 @@ const ContactPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted");
+    toast({
+      title: "Message sent!",
+      description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+    });
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: ""
+    });
+  };
+
+  const handleCallInstead = () => {
+    toast({
+      title: "Call us",
+      description: "You can reach us at +46 8 123 456 78 during business hours.",
+    });
+    // Optionally try to initiate a call on mobile devices
+    if (window.navigator && 'vibrate' in window.navigator) {
+      window.location.href = "tel:+46812345678";
+    }
   };
 
   return (
@@ -114,6 +151,8 @@ const ContactPage = () => {
                       <Input
                         id="firstName"
                         placeholder="John"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
                         required
                       />
                     </div>
@@ -122,6 +161,8 @@ const ContactPage = () => {
                       <Input
                         id="lastName"
                         placeholder="Doe"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
                         required
                       />
                     </div>
@@ -133,6 +174,8 @@ const ContactPage = () => {
                       id="email"
                       type="email"
                       placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -143,6 +186,8 @@ const ContactPage = () => {
                       id="phone"
                       type="tel"
                       placeholder="+46 70 123 45 67"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                     />
                   </div>
 
@@ -151,6 +196,8 @@ const ContactPage = () => {
                     <Input
                       id="subject"
                       placeholder="How can we help you?"
+                      value={formData.subject}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -161,6 +208,8 @@ const ContactPage = () => {
                       id="message"
                       placeholder="Tell us more about your inquiry..."
                       className="min-h-[120px]"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -169,7 +218,7 @@ const ContactPage = () => {
                     <Button type="submit" size="lg" className="flex-1">
                       Send Message
                     </Button>
-                    <Button type="button" variant="outline" size="lg">
+                    <Button type="button" variant="outline" size="lg" onClick={handleCallInstead}>
                       Call Instead
                     </Button>
                   </div>

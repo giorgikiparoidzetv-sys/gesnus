@@ -23,6 +23,7 @@ import MiniCart from "./MiniCart";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
   const { getTotalItems } = useCart();
   const { t } = useTranslation();
@@ -35,6 +36,24 @@ const Header = () => {
     { name: t("nav.about"), path: "/about" },
     { name: t("nav.contact"), path: "/contact" },
   ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Search Error",
+        description: "Please enter a search term",
+      });
+      return;
+    }
+    navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
+    setSearchQuery("");
+    toast({
+      title: "Search initiated",
+      description: `Searching for "${searchQuery}"`,
+    });
+  };
 
   const handleLogout = async () => {
     try {
@@ -100,14 +119,16 @@ const Header = () => {
         {/* Search, Cart and Actions */}
         <div className="flex items-center space-x-3">
           {/* Search Bar - Hidden on mobile */}
-          <div className="hidden lg:flex relative">
+          <form onSubmit={handleSearch} className="hidden lg:flex relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
               placeholder={t("header.search")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-48 pl-10"
             />
-          </div>
+          </form>
 
           {/* Language Switcher */}
           <div className="hidden md:block">
@@ -205,14 +226,16 @@ const Header = () => {
               </NavLink>
             ))}
             {/* Mobile Search */}
-            <div className="relative pt-2">
+            <form onSubmit={handleSearch} className="relative pt-2">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder={t("header.search")}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
-            </div>
+            </form>
 
             {/* Mobile Language Switcher */}
             <div className="pt-2 md:hidden">

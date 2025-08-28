@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
 import { Link } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 import heroImage from "@/assets/hero-snus.jpg";
 import generalWhite from "@/assets/general-white.jpg";
 import siberia from "@/assets/siberia.jpg";
@@ -11,6 +13,33 @@ import gotebergRape from "@/assets/goteborg-rape.jpg";
 import odens from "@/assets/odens.jpg";
 
 const HomePage = () => {
+  const { t } = useTranslation();
+  const [email, setEmail] = useState("");
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter a valid email address",
+      });
+      return;
+    }
+    toast({
+      title: "Success!",
+      description: "You've been successfully subscribed to our newsletter",
+    });
+    setEmail("");
+  };
+
+  const handleAddToCart = (product: any) => {
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart`,
+    });
+  };
+
   // Sample products data
   const featuredProducts = [
     {
@@ -78,22 +107,22 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                Premium Snus
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                {t("home.hero.title")}
                 <span className="block text-secondary">Collection</span>
               </h1>
               <p className="text-lg lg:text-xl text-primary-foreground/90 max-w-md">
-                Discover the finest selection of authentic Swedish snus from trusted brands. Quality guaranteed, fast shipping worldwide.
+                {t("home.hero.subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" variant="secondary">
                   <Link to="/shop">
-                    Shop Now
+                    {t("home.hero.shop")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                  <Link to="/about">Learn More</Link>
+                  <Link to="/about">{t("home.hero.learn")}</Link>
                 </Button>
               </div>
             </div>
@@ -115,7 +144,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Best Sellers
+              {t("home.bestsellers")}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Our most popular snus products, loved by customers worldwide
@@ -127,7 +156,7 @@ const HomePage = () => {
               <ProductCard
                 key={product.id}
                 product={product}
-                onAddToCart={(product) => console.log("Added to cart:", product)}
+                onAddToCart={handleAddToCart}
               />
             ))}
           </div>
@@ -182,16 +211,19 @@ const HomePage = () => {
               <p className="text-lg opacity-90 max-w-2xl mx-auto">
                 Subscribe to our newsletter for exclusive offers, new product launches, and snus tips
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <input
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 px-4 py-3 rounded-lg border-0 text-foreground"
+                  required
                 />
-                <Button variant="secondary" size="lg">
+                <Button type="submit" variant="secondary" size="lg">
                   Subscribe
                 </Button>
-              </div>
+              </form>
             </div>
           </Card>
         </div>
