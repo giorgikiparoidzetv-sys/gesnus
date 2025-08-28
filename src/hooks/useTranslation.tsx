@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 
-type Language = "ka" | "ru";
+type Language = "en" | "ka" | "ru";
 
 interface TranslationContextType {
   language: Language;
@@ -11,6 +11,39 @@ interface TranslationContextType {
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
 const translations = {
+  en: {
+    "nav.home": "Home",
+    "nav.shop": "Shop", 
+    "nav.about": "About",
+    "nav.contact": "Contact",
+    "nav.login": "Login",
+    "nav.dashboard": "My Account",
+    "nav.cart": "Cart",
+    "header.search": "Search products...",
+    "auth.login": "Login",
+    "auth.register": "Register",
+    "auth.logout": "Logout",
+    "auth.my_account": "My Account",
+    "home.hero.title": "Premium Online Snus Store",
+    "home.hero.subtitle": "Discover high-quality snus and tobacco pouches from top brands",
+    "home.hero.shop": "Start Shopping",
+    "home.hero.learn": "Learn More",
+    "home.bestsellers": "Bestsellers",
+    "product.add_to_cart": "Add to Cart",
+    "cart.title": "Your Cart",
+    "cart.empty": "Cart is empty",
+    "cart.continue_shopping": "Continue Shopping",
+    "cart.remove": "Remove",
+    "cart.subtotal": "Subtotal",
+    "cart.checkout": "Checkout",
+    "cart.mini.view_cart": "View Cart",
+    "checkout.title": "Checkout",
+    "checkout.processing": "Processing payment...",
+    "order.success.title": "Order Successful!",
+    "order.success.message": "Thank you for your purchase. Your order will be processed and shipped soon.",
+    "order.success.continue": "Continue Shopping",
+    "common.error": "Error",
+  },
   ka: {
     "nav.home": "მთავარი",
     "nav.shop": "მაღაზია", 
@@ -80,15 +113,15 @@ const translations = {
 };
 
 export const TranslationProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>("ka");
+  const [language, setLanguageState] = useState<Language>("en");
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language;
-    if (savedLanguage && (savedLanguage === "ka" || savedLanguage === "ru")) {
+    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ka" || savedLanguage === "ru")) {
       setLanguageState(savedLanguage);
       document.documentElement.lang = savedLanguage;
     } else {
-      document.documentElement.lang = "ka";
+      document.documentElement.lang = "en";
     }
   }, []);
 
