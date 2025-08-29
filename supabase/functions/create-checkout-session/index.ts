@@ -1,15 +1,29 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+const ALLOWED_ORIGINS = new Set<string>([
+  "http://localhost:3000",
+  "https://gehnffwcsqvhdodqtbtv.lovableproject.com",
+]);
+
+const getCorsHeaders = (origin: string) => {
+  const allowed = origin && ALLOWED_ORIGINS.has(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed ? origin : Array.from(ALLOWED_ORIGINS)[0],
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  } as const;
 };
 
 serve(async (req) => {
+  const originHeader = req.headers.get("origin") || "";
+  const trustedOrigin = ALLOWED_ORIGINS.has(originHeader)
+    ? originHeader
+    : Array.from(ALLOWED_ORIGINS)[0];
+
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(originHeader) });
   }
 
   try {
@@ -31,26 +45,38 @@ serve(async (req) => {
       apiVersion: "2023-10-16",
     });
 
-    // Create line items for Stripe
-    const line_items = items.map((item: any) => ({
-      price_data: {
-        currency: "gel", // Georgian Lari
-        product_data: {
-          name: item.name,
-          description: `${item.brand || "Premium"} Snus Product`,
+    // Create line items for Stripe (basic server-side validation)
+    const sanitizeText = (s: unknown) => String(s ?? '').slice(0, 100);
+    const line_items = items.map((item: any) => {
+      const qty = Math.min(Math.max(parseInt(item?.quantity, 10) || 1, 1), 20);
+      const priceNumber = Number(item?.price);
+      if (!Number.isFinite(priceNumber) || priceNumber <= 0) {
+        throw new Error("Invalid item price");
+      }
+      const unit_amount = Math.round(priceNumber * 100);
+      if (unit_amount > 5_000_000) { // Max 50,000 GEL per item (safety)
+        throw new Error("Item price exceeds allowed limit");
+      }
+      return {
+        price_data: {
+          currency: "gel", // Georgian Lari
+          product_data: {
+            name: sanitizeText(item?.name),
+            description: `${sanitizeText(item?.brand || "Premium")} Snus Product`,
+          },
+          unit_amount,
         },
-        unit_amount: Math.round(item.price * 100), // Convert to tetri (Georgian cents)
-      },
-      quantity: item.quantity,
-    }));
+        quantity: qty,
+      };
+    });
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       customer_email: customer_email,
       line_items,
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/order-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/cart`,
+      success_url: `${trustedOrigin}/order-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${trustedOrigin}/cart`,
       automatic_tax: { enabled: false },
       shipping_address_collection: {
         allowed_countries: ["GE"], // Georgia
@@ -63,7 +89,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ url: session.url }),
       { 
-        headers: { ...corsHeaders, "Content-Type": "application/json" }, 
+        headers: { ...getCorsHeaders(originHeader), "Content-Type": "application/json" }, 
         status: 200 
       }
     );
@@ -78,7 +104,7 @@ serve(async (req) => {
       }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        headers: { ...getCorsHeaders(originHeader), "Content-Type": "application/json" } 
       }
     );
   }

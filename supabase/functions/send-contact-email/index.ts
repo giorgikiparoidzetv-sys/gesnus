@@ -1,9 +1,18 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.56.0';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const ALLOWED_ORIGINS = new Set<string>([
+  "http://localhost:3000",
+  "https://gehnffwcsqvhdodqtbtv.lovableproject.com",
+]);
+
+const getCorsHeaders = (origin: string) => {
+  const allowed = origin && ALLOWED_ORIGINS.has(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed ? origin : Array.from(ALLOWED_ORIGINS)[0],
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  } as const;
 };
 
 interface ContactFormData {
@@ -16,9 +25,10 @@ interface ContactFormData {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  const origin = req.headers.get('origin') || '';
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(origin) });
   }
 
   try {
@@ -134,7 +144,7 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          ...corsHeaders,
+          ...getCorsHeaders(origin),
         },
       }
     );
@@ -150,7 +160,7 @@ const handler = async (req: Request): Promise<Response> => {
         status: 500,
         headers: { 
           'Content-Type': 'application/json', 
-          ...corsHeaders 
+          ...getCorsHeaders(origin)
         },
       }
     );
