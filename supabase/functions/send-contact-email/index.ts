@@ -36,7 +36,27 @@ const handler = async (req: Request): Promise<Response> => {
       subject: formData.subject
     });
 
-    // 1. Store in Supabase database
+    // Sanitize user input to prevent XSS attacks
+    const sanitizeInput = (input: string): string => {
+      return input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
+        .replace(/\//g, '&#x2F;');
+    };
+
+    const sanitizedData = {
+      firstName: sanitizeInput(formData.firstName),
+      lastName: sanitizeInput(formData.lastName),
+      email: sanitizeInput(formData.email),
+      phone: formData.phone ? sanitizeInput(formData.phone) : null,
+      subject: sanitizeInput(formData.subject),
+      message: sanitizeInput(formData.message)
+    };
+
+    // 1. Store in Supabase database (use original data for storage)
     const { data: savedMessage, error: dbError } = await supabase
       .from('contact_messages')
       .insert({
@@ -57,25 +77,25 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Message saved to database:', savedMessage.id);
 
-    // 2. Send email via SendGrid
+    // 2. Send email via SendGrid (use sanitized data in email)
     const emailData = {
       personalizations: [{
         to: [{ email: contactEmail }],
-        subject: `Contact Form: ${formData.subject}`
+        subject: `Contact Form: ${sanitizedData.subject}`
       }],
       from: { email: "noreply@snusshop.com", name: "SnusShop Contact Form" },
       content: [{
         type: "text/html",
         value: `
           <h2>New Contact Form Submission</h2>
-          <p><strong>From:</strong> ${formData.firstName} ${formData.lastName}</p>
-          <p><strong>Email:</strong> ${formData.email}</p>
-          ${formData.phone ? `<p><strong>Phone:</strong> ${formData.phone}</p>` : ''}
-          <p><strong>Subject:</strong> ${formData.subject}</p>
+          <p><strong>From:</strong> ${sanitizedData.firstName} ${sanitizedData.lastName}</p>
+          <p><strong>Email:</strong> ${sanitizedData.email}</p>
+          ${sanitizedData.phone ? `<p><strong>Phone:</strong> ${sanitizedData.phone}</p>` : ''}
+          <p><strong>Subject:</strong> ${sanitizedData.subject}</p>
           <div style="margin-top: 20px;">
             <strong>Message:</strong>
             <div style="background: #f5f5f5; padding: 15px; margin-top: 10px; border-radius: 5px;">
-              ${formData.message.replace(/\n/g, '<br>')}
+              ${sanitizedData.message.replace(/\n/g, '<br>')}
             </div>
           </div>
           <hr style="margin: 20px 0;">
