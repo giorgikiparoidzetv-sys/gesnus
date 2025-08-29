@@ -22,6 +22,10 @@ export const AgeRestrictionPopup = ({ isOpen, onConfirm }: AgeRestrictionPopupPr
   };
 
   const handleLetMeIn = () => {
+    // Reset all internal state before confirming
+    setShowSecondPopup(false);
+    setShowFinalPopup(false);
+    setShowCrashScreen(false);
     onConfirm();
   };
 
