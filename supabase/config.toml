@@ -37,8 +37,8 @@ s3_credentials_region = "local"
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["https://gehnffwcsqvhdodqtbtv.lovableproject.com"]
+site_url = "https://gegesnusavs.com"
+additional_redirect_urls = ["https://gehnffwcsqvhdodqtbtv.lovableproject.com", "https://www.gegesnusavs.com"]
 jwt_expiry = 3600
 refresh_token_rotation_enabled = true
 security_update_password_require_reauthentication = true

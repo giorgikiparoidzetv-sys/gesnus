@@ -3,6 +3,8 @@ import Stripe from "https://esm.sh/stripe@14.21.0";
 
 const ALLOWED_ORIGINS = new Set<string>([
   "http://localhost:3000",
+  "https://gegesnusavs.com",
+  "https://www.gegesnusavs.com", 
   "https://gehnffwcsqvhdodqtbtv.lovableproject.com",
 ]);
 
@@ -35,7 +37,7 @@ serve(async (req) => {
         JSON.stringify({ error: "Items array is required and cannot be empty" }),
         { 
           status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          headers: { ...getCorsHeaders(originHeader), "Content-Type": "application/json" } 
         }
       );
     }

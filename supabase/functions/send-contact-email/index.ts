@@ -3,6 +3,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.56.0';
 
 const ALLOWED_ORIGINS = new Set<string>([
   "http://localhost:3000",
+  "https://gegesnusavs.com",
+  "https://www.gegesnusavs.com",
   "https://gehnffwcsqvhdodqtbtv.lovableproject.com",
 ]);
 
