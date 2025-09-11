@@ -92,6 +92,93 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          brand: string
+          category: string
+          created_at: string
+          currency: string
+          featured: boolean
+          flavor_tags: string[] | null
+          id: string
+          image_url: string
+          long_description_en: string
+          long_description_ka: string
+          name_en: string
+          name_ka: string
+          nicotine_mg: number
+          og_image: string | null
+          price: number
+          rating: number
+          sale_price: number | null
+          seo_description: string | null
+          seo_title: string | null
+          short_description_en: string
+          short_description_ka: string
+          sku: string
+          slug: string
+          stock: number
+          strength: string
+          updated_at: string
+        }
+        Insert: {
+          brand: string
+          category?: string
+          created_at?: string
+          currency?: string
+          featured?: boolean
+          flavor_tags?: string[] | null
+          id?: string
+          image_url: string
+          long_description_en: string
+          long_description_ka: string
+          name_en: string
+          name_ka: string
+          nicotine_mg: number
+          og_image?: string | null
+          price: number
+          rating?: number
+          sale_price?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_description_en: string
+          short_description_ka: string
+          sku: string
+          slug: string
+          stock?: number
+          strength: string
+          updated_at?: string
+        }
+        Update: {
+          brand?: string
+          category?: string
+          created_at?: string
+          currency?: string
+          featured?: boolean
+          flavor_tags?: string[] | null
+          id?: string
+          image_url?: string
+          long_description_en?: string
+          long_description_ka?: string
+          name_en?: string
+          name_ka?: string
+          nicotine_mg?: number
+          og_image?: string | null
+          price?: number
+          rating?: number
+          sale_price?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_description_en?: string
+          short_description_ka?: string
+          sku?: string
+          slug?: string
+          stock?: number
+          strength?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
