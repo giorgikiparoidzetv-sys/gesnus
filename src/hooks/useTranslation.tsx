@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 
-type Language = "en" | "ka" | "ru";
+type Language = "en" | "ka";
 
 interface TranslationContextType {
   language: Language;
@@ -77,39 +77,6 @@ const translations = {
     "order.success.continue": "შოპინგის გაგრძელება",
     "common.error": "შეცდომა",
   },
-  ru: {
-    "nav.home": "Главная",
-    "nav.shop": "Магазин",
-    "nav.about": "О нас", 
-    "nav.contact": "Контакты",
-    "nav.login": "Вход",
-    "nav.dashboard": "Мой аккаунт",
-    "nav.cart": "Корзина",
-    "header.search": "Поиск продуктов...",
-    "auth.login": "Вход",
-    "auth.register": "Регистрация",
-    "auth.logout": "Выход",
-    "auth.my_account": "Мой аккаунт",
-    "home.hero.title": "Премиальный интернет-магазин снюса",
-    "home.hero.subtitle": "Откройте для себя высококачественный снюс и табачные пакеты от ведущих брендов",
-    "home.hero.shop": "Начать покупки",
-    "home.hero.learn": "Узнать больше",
-    "home.bestsellers": "Бестселлеры",
-    "product.add_to_cart": "В корзину",
-    "cart.title": "Ваша корзина",
-    "cart.empty": "Корзина пуста",
-    "cart.continue_shopping": "Продолжить покупки",
-    "cart.remove": "Удалить",
-    "cart.subtotal": "Итого",
-    "cart.checkout": "Оформить заказ",
-    "cart.mini.view_cart": "Посмотреть корзину",
-    "checkout.title": "Оформление заказа",
-    "checkout.processing": "Обработка платежа...",
-    "order.success.title": "Заказ успешно оформлен!",
-    "order.success.message": "Спасибо за покупку. Ваш заказ будет обработан и отправлен в ближайшее время.",
-    "order.success.continue": "Продолжить покупки",
-    "common.error": "Ошибка",
-  }
 };
 
 export const TranslationProvider = ({ children }: { children: ReactNode }) => {
@@ -117,7 +84,7 @@ export const TranslationProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language;
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ka" || savedLanguage === "ru")) {
+    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ka")) {
       setLanguageState(savedLanguage);
       document.documentElement.lang = savedLanguage;
     } else {

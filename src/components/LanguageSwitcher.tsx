@@ -22,14 +22,6 @@ const LanguageSwitcher = () => {
       >
         🇬🇪 KA
       </Button>
-      <Button
-        variant={language === "ru" ? "default" : "ghost"}
-        size="sm"
-        onClick={() => setLanguage("ru")}
-        className="text-xs px-2 py-1 h-7"
-      >
-        🇷🇺 RU
-      </Button>
     </div>
   );
 };

@@ -45,12 +45,12 @@ export const AgeRestrictionPopup = ({ isOpen, onConfirm }: AgeRestrictionPopupPr
         <Card className="w-full max-w-md mx-4 border-red-800 bg-red-50">
           <CardContent className="p-8 text-center space-y-6">
             <div className="text-6xl mb-4">💥</div>
-            <h1 className="text-2xl font-bold text-red-800">Site Crashed!</h1>
+            <h1 className="text-2xl font-bold text-red-800">❌ თქვენ არ ხართ 18 წლის – საიტზე შესვლა შეუძლებელია!</h1>
             <p className="text-red-700">
-              You chose poorly. The website has crashed and cannot be accessed.
+              წვდომა სრულად დაბლოკილია.
             </p>
             <div className="text-sm text-red-600">
-              Error 418: I'm a teapot (and you're not 18+)
+              შეცდომა 403: წვდომა აკრძალული
             </div>
           </CardContent>
         </Card>
@@ -119,7 +119,7 @@ export const AgeRestrictionPopup = ({ isOpen, onConfirm }: AgeRestrictionPopupPr
                 className="w-full text-sm h-auto py-3 px-4 whitespace-normal leading-tight"
                 size="lg"
               >
-                არმინდა თქვენი იყო თქვენი დედა მოვტყან
+                არ მინდა
               </Button>
             </div>
           </div>

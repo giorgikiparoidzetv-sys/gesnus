@@ -96,7 +96,9 @@ const Header = () => {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
             <span className="text-lg font-bold text-primary-foreground">S</span>
           </div>
-          <span className="text-xl font-bold text-foreground">SnusShop</span>
+          <span className="text-xl font-bold text-foreground">
+            <span className="text-red-500">Ge</span><span className="text-white">Snus</span>
+          </span>
         </NavLink>
 
         {/* Desktop Navigation */}
