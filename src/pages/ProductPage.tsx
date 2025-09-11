@@ -5,94 +5,68 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ProductCard from "@/components/ProductCard";
-import generalWhite from "@/assets/general-white.jpg";
-import siberia from "@/assets/siberia.jpg";
-import gotebergRape from "@/assets/goteborg-rape.jpg";
+import { useProducts } from "@/hooks/useProducts";
+import { useCart } from "@/hooks/useCart";
 
 const ProductPage = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { products, loading } = useProducts();
+  const { addToCart } = useCart();
 
-  // Sample product data - in a real app, this would come from an API
-  const product = {
-    id: 1,
-    name: "General White Portion",
-    price: 4.99,
-    originalPrice: 6.99,
-    rating: 5,
-    reviewCount: 128,
-    brand: "General",
-    strength: "Regular",
-    flavor: "Traditional",
-    portions: 24,
-    weight: "16.8g",
-    inStock: true,
-    description: {
-      short: "Classic Swedish snus with traditional tobacco flavor and white portions for a cleaner experience.",
-      long: "General White is the most popular snus in Sweden and around the world. It has a spicy tobacco character with hints of bergamot, tea, hay and leather. The portions are white, which means they are not pre-moistened like original portions. This makes them less runny and gives you a longer-lasting flavor release."
-    },
-    images: [
-      generalWhite,
-      generalWhite,
-      generalWhite,
-      generalWhite
-    ],
-    specifications: [
-      { label: "Strength", value: "Regular (8mg/g)" },
-      { label: "Flavor", value: "Traditional Tobacco" },
-      { label: "Portions", value: "24 portions" },
-      { label: "Weight", value: "16.8g" },
-      { label: "Format", value: "White Portion" },
-      { label: "Origin", value: "Sweden" }
-    ]
-  };
+  // Find the product by slug (using id as slug for now)
+  const product = products.find(p => p.slug === id || p.id === id);
 
-  // Sample recommended products
-  const recommendedProducts = [
-    {
-      id: 2,
-      name: "General Original",
-      price: 4.79,
-      rating: 5,
-      image: generalWhite,
-      brand: "General",
-      strength: "Regular"
-    },
-    {
-      id: 3,
-      name: "General Mint",
-      price: 4.99,
-      rating: 4,
-      image: generalWhite,
-      brand: "General",
-      strength: "Regular"
-    },
-    {
-      id: 4,
-      name: "Göteborg Rapé White",
-      price: 4.79,
-      rating: 5,
-      image: gotebergRape,
-      brand: "Göteborg Rapé",
-      strength: "Regular"
+  const handleQuantityChange = (increase: boolean) => {
+    if (increase) {
+      setQuantity(prev => prev + 1);
+    } else if (quantity > 1) {
+      setQuantity(prev => prev - 1);
     }
-  ];
-
-  // Sample product data (in a real app, this would be fetched by productId)  
-  const sampleProduct = {
-    id: 1,
-    name: "General White Portion",
-    brand: "General",
-    price: 4.99,
-    originalPrice: 6.99,
-    rating: 5,
-    stock: 156,
-    images: [generalWhite, generalWhite, generalWhite],
-    shortDescription: "Premium white portion snus with traditional Swedish tobacco flavor and bergamot notes.",
-    features: ["Swedish tobacco", "Bergamot flavor", "White portion format", "Regular strength"],
-    description: "General White is the original white portion snus that started it all. Made from high-quality tobacco with a perfect balance of tradition and innovation, this snus offers a clean, refined taste experience. The white portion format ensures minimal drip and maximum comfort, while the classic General flavor profile delivers the authentic Swedish snus taste that has been perfected over generations."
   };
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${
+          i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+        }`}
+      />
+    ));
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">Product not found</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Get recommended products (other products from same brand or similar)
+  const recommendedProducts = products
+    .filter(p => p.id !== product.id && (p.brand === product.brand || p.category === product.category))
+    .slice(0, 3);
 
   return (
     <div className="min-h-screen py-8">
@@ -110,30 +84,13 @@ const ProductPage = () => {
             {/* Main Image */}
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted">
               <img
-                src={product.images[selectedImage]}
+                src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
             
-            {/* Thumbnail Images */}
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
-                    selectedImage === index ? "border-primary" : "border-transparent"
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {/* Single Image - No thumbnails since we only have one image */}
           </div>
 
           {/* Product Info */}
@@ -141,8 +98,8 @@ const ProductPage = () => {
             {/* Brand and Status */}
             <div className="flex items-center justify-between">
               <Badge variant="secondary">{product.brand}</Badge>
-              {product.inStock ? (
-                <Badge className="bg-green-100 text-green-800 border-green-200">In Stock</Badge>
+              {product.stock > 0 ? (
+                <Badge className="bg-green-100 text-green-800 border-green-200">In Stock ({product.stock})</Badge>
               ) : (
                 <Badge variant="destructive">Out of Stock</Badge>
               )}
@@ -157,27 +114,27 @@ const ProductPage = () => {
                 {renderStars(product.rating)}
               </div>
               <span className="text-sm text-muted-foreground">
-                ({product.reviewCount} reviews)
+                ({product.rating} rating)
               </span>
             </div>
 
             {/* Price */}
             <div className="flex items-center space-x-3">
-              <span className="text-3xl font-bold">${product.price}</span>
-              {product.originalPrice && (
+              <span className="text-3xl font-bold">${product.salePrice || product.price}</span>
+              {product.salePrice && (
                 <span className="text-xl text-muted-foreground line-through">
-                  ${product.originalPrice}
+                  ${product.price}
                 </span>
               )}
-              {product.originalPrice && (
+              {product.salePrice && (
                 <Badge variant="destructive">
-                  Save ${(product.originalPrice - product.price).toFixed(2)}
+                  Save ${(product.price - product.salePrice).toFixed(2)}
                 </Badge>
               )}
             </div>
 
             {/* Short Description */}
-            <p className="text-muted-foreground text-lg">{product.description.short}</p>
+            <p className="text-muted-foreground text-lg">{product.shortDescription}</p>
 
             {/* Key Features */}
             <div className="grid grid-cols-2 gap-4">
@@ -186,16 +143,16 @@ const ProductPage = () => {
                 <p className="font-medium">{product.strength}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Portions:</span>
-                <p className="font-medium">{product.portions}</p>
+                <span className="text-sm text-muted-foreground">Nicotine:</span>
+                <p className="font-medium">{product.nicotineMg}mg/g</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Flavor:</span>
-                <p className="font-medium">{product.flavor}</p>
+                <span className="text-sm text-muted-foreground">Category:</span>
+                <p className="font-medium">{product.category}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Weight:</span>
-                <p className="font-medium">{product.weight}</p>
+                <span className="text-sm text-muted-foreground">SKU:</span>
+                <p className="font-medium">{product.sku}</p>
               </div>
             </div>
 
@@ -224,9 +181,9 @@ const ProductPage = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="flex-1" disabled={!product.inStock}>
+              <Button size="lg" className="flex-1" disabled={product.stock === 0} onClick={handleAddToCart}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Add to Cart - ${(product.price * quantity).toFixed(2)}
+                Add to Cart - ${((product.salePrice || product.price) * quantity).toFixed(2)}
               </Button>
               <Button variant="outline" size="lg">
                 <Heart className="mr-2 h-4 w-4" />
@@ -264,20 +221,38 @@ const ProductPage = () => {
               <div>
                 <h3 className="text-xl font-semibold mb-4">Description</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {product.description.long}
+                  {product.longDescription}
                 </p>
               </div>
 
-              {/* Specifications */}
+              {/* Product Details */}
               <div>
-                <h3 className="text-xl font-semibold mb-4">Specifications</h3>
+                <h3 className="text-xl font-semibold mb-4">Product Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {product.specifications.map((spec, index) => (
-                    <div key={index} className="flex justify-between py-2 border-b border-border/50">
-                      <span className="text-muted-foreground">{spec.label}:</span>
-                      <span className="font-medium">{spec.value}</span>
-                    </div>
-                  ))}
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Brand:</span>
+                    <span className="font-medium">{product.brand}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Strength:</span>
+                    <span className="font-medium">{product.strength}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Nicotine:</span>
+                    <span className="font-medium">{product.nicotineMg}mg/g</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Category:</span>
+                    <span className="font-medium">{product.category}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Currency:</span>
+                    <span className="font-medium">{product.currency}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">SKU:</span>
+                    <span className="font-medium">{product.sku}</span>
+                  </div>
                 </div>
               </div>
             </div>
