@@ -79,23 +79,19 @@ const ProductPage = () => {
     }
   ];
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`h-4 w-4 ${
-          i < rating ? "fill-secondary stroke-secondary" : "stroke-muted-foreground"
-        }`}
-      />
-    ));
-  };
-
-  const handleQuantityChange = (increment: boolean) => {
-    if (increment) {
-      setQuantity(prev => prev + 1);
-    } else if (quantity > 1) {
-      setQuantity(prev => prev - 1);
-    }
+  // Sample product data (in a real app, this would be fetched by productId)  
+  const sampleProduct = {
+    id: 1,
+    name: "General White Portion",
+    brand: "General",
+    price: 4.99,
+    originalPrice: 6.99,
+    rating: 5,
+    stock: 156,
+    images: [generalWhite, generalWhite, generalWhite],
+    shortDescription: "Premium white portion snus with traditional Swedish tobacco flavor and bergamot notes.",
+    features: ["Swedish tobacco", "Bergamot flavor", "White portion format", "Regular strength"],
+    description: "General White is the original white portion snus that started it all. Made from high-quality tobacco with a perfect balance of tradition and innovation, this snus offers a clean, refined taste experience. The white portion format ensures minimal drip and maximum comfort, while the classic General flavor profile delivers the authentic Swedish snus taste that has been perfected over generations."
   };
 
   return (

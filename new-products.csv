@@ -1,0 +1,15 @@
+id,slug,name_en,name_ka,price,stock,image_url,brand,strength,tags,sku,featured,rating,sale_price
+lyft-ice-cool-mint-001,lyft-ice-cool-mint,Lyft Ice Cool Mint,ლაიფთ აისი კუელ მინტ,6.49,150,/assets/product-09.jpg,Lyft,Strong,"mint,menthol",LYF-ICM-001,true,4.5,
+lyft-tropical-breeze-001,lyft-tropical-breeze,Lyft Tropical Breeze,ლაიფთ ტროპიკალ ბრიზ,6.99,120,/assets/product-10.jpg,Lyft,Regular,"tropical,citrus,fruit",LYF-TB-001,false,4.2,
+velo-crispy-peppermint-001,velo-crispy-peppermint,Velo Crispy Peppermint,ველო კრისპი პეპერმინტ,5.79,180,/assets/product-11.jpg,Velo,Regular,"peppermint,mint",VEL-CP-001,true,4.4,
+velo-berry-frost-001,velo-berry-frost,Velo Berry Frost,ველო ბერი ფროსტ,5.99,90,/assets/product-12.jpg,Velo,Light,"berry,fruit,menthol",VEL-BF-001,false,4.1,6.99
+zyn-spearmint-3mg-001,zyn-spearmint-3mg,ZYN Spearmint 3mg,ზაინ სპირმინტ 3მგ,4.99,200,/assets/product-13.jpg,ZYN,Light,"spearmint,mint",ZYN-SP3-001,false,4.3,
+zyn-cinnamon-6mg-001,zyn-cinnamon-6mg,ZYN Cinnamon 6mg,ზაინ ცინამონი 6მგ,5.29,160,/assets/product-14.jpg,ZYN,Regular,"cinnamon,spice",ZYN-CN6-001,false,4.0,
+knox-dark-white-portion-001,knox-dark-white-portion,Knox Dark White Portion,ნოქს დარკ ვაითი პორშენ,7.49,85,/assets/product-15.jpg,Knox,Strong,"tobacco,dark",KNX-DWP-001,false,4.6,
+knox-xrange-fizzy-cola-001,knox-xrange-fizzy-cola,Knox XRANGE Fizzy Cola,ნოქს იქსრენჯი ფიზი კოლა,8.99,110,/assets/product-16.jpg,Knox,Regular,"cola,fizzy",KNX-FC-001,true,3.8,
+white-fox-full-charge-001,white-fox-full-charge,White Fox Full Charge,ვაითი ფოქსი ფულ ჩარჯი,7.99,75,/assets/product-20.jpg,White Fox,Extra Strong,"mint,menthol",WF-FC-001,true,4.4,
+pablo-ice-cold-001,pablo-ice-cold,Pablo Ice Cold,პაბლო აისი კოლდ,9.99,45,/assets/product-31.jpg,Pablo,Extra Strong,"mint,extreme",PAB-IC-001,true,4.6,
+ettan-white-portion-001,ettan-white-portion,Ettan White Portion,ეტანი ვაითი პორშენ,5.99,120,/assets/product-25.jpg,Ettan,Regular,"tobacco,classic",ETT-WP-001,true,4.8,
+general-mackmyra-001,general-mackmyra,General Mackmyra,ჯენერალ მაკმირა,9.49,75,/assets/product-39.jpg,General,Strong,"whiskey,premium",GEN-MAC-001,true,4.4,
+royal-crown-mint-001,royal-crown-mint,Royal Crown Mint,როიალ კრაუნ მინტ,10.99,50,/assets/product-46.jpg,Royal Crown,Strong,"mint,royal",RC-MINT-001,true,4.6,
+artisan-collection-tobacco-001,artisan-collection-tobacco,Artisan Collection Tobacco,არტიზან კოლექშენ თამბაქო,12.99,40,/assets/product-45.jpg,Artisan Collection,Regular,"tobacco,premium",ART-TOB-001,true,4.8,

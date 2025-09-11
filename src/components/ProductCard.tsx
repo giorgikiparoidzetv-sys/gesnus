@@ -3,17 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart.tsx";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  image: string;
-  brand?: string;
-  strength?: string;
-}
+import { Product } from "@/hooks/useProducts";
 
 interface ProductCardProps {
   product: Product;
@@ -56,7 +46,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
-          {product.originalPrice && (
+          {product.salePrice && (
             <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-medium">
               Sale
             </div>
@@ -90,11 +80,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           {/* Price */}
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-foreground">
-              ₾{product.price.toFixed(2)}
+              ₾{(product.salePrice || product.price).toFixed(2)}
             </span>
-            {product.originalPrice && (
+            {product.salePrice && (
               <span className="text-sm text-muted-foreground line-through">
-                ₾{product.originalPrice.toFixed(2)}
+                ₾{product.price.toFixed(2)}
               </span>
             )}
           </div>

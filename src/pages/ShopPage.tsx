@@ -4,10 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
-import generalWhite from "@/assets/general-white.jpg";
-import siberia from "@/assets/siberia.jpg";
-import gotebergRape from "@/assets/goteborg-rape.jpg";
-import odens from "@/assets/odens.jpg";
+import { useProducts } from "@/hooks/useProducts";
 import {
   Select,
   SelectContent,
@@ -22,113 +19,31 @@ const ShopPage = () => {
   const [selectedStrength, setSelectedStrength] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
 
-  // Sample products data - expanded
-  const allProducts = [
-    {
-      id: 1,
-      name: "General White Portion",
-      price: 4.99,
-      originalPrice: 6.99,
-      rating: 5,
-      image: generalWhite,
-      brand: "General",
-      strength: "Regular"
-    },
-    {
-      id: 2,
-      name: "Siberia White Dry",
-      price: 5.49,
-      rating: 4,
-      image: siberia,
-      brand: "Siberia",
-      strength: "Extra Strong"
-    },
-    {
-      id: 3,
-      name: "Göteborg Rapé White",
-      price: 4.79,
-      rating: 5,
-      image: gotebergRape,
-      brand: "Göteborg Rapé",
-      strength: "Regular"
-    },
-    {
-      id: 4,
-      name: "Odens Cold Dry",
-      price: 3.99,
-      originalPrice: 4.99,
-      rating: 4,
-      image: odens,
-      brand: "Odens",
-      strength: "Strong"
-    },
-    {
-      id: 5,
-      name: "Skruf Super White",
-      price: 5.99,
-      rating: 5,
-      image: generalWhite,
-      brand: "Skruf",
-      strength: "Strong"
-    },
-    {
-      id: 6,
-      name: "Thunder Frosted",
-      price: 4.29,
-      rating: 4,
-      image: siberia,
-      brand: "Thunder",
-      strength: "Regular"
-    },
-    {
-      id: 7,
-      name: "General Mini Mint",
-      price: 4.49,
-      rating: 4,
-      image: generalWhite,
-      brand: "General",
-      strength: "Light"
-    },
-    {
-      id: 8,
-      name: "Odens Double Mint",
-      price: 4.19,
-      originalPrice: 5.19,
-      rating: 4,
-      image: odens,
-      brand: "Odens",
-      strength: "Strong"
-    }
-  ];
+  const { 
+    products, 
+    loading, 
+    searchProducts, 
+    sortProducts, 
+    getBrands, 
+    getStrengths 
+  } = useProducts();
 
-  const brands = ["all", "General", "Siberia", "Göteborg Rapé", "Odens", "Skruf", "Thunder"];
-  const strengths = ["all", "Light", "Regular", "Strong", "Extra Strong"];
+  const brands = getBrands();
+  const strengths = getStrengths();
 
   // Filter products based on search and filters
-  const filteredProducts = allProducts.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.brand.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesBrand = selectedBrand === "all" || product.brand === selectedBrand;
-    const matchesStrength = selectedStrength === "all" || product.strength === selectedStrength;
-    
-    return matchesSearch && matchesBrand && matchesStrength;
-  });
+  let filteredProducts = searchProducts(searchTerm);
+  
+  if (selectedBrand !== "all") {
+    filteredProducts = filteredProducts.filter(product => product.brand === selectedBrand);
+  }
+  
+  if (selectedStrength !== "all") {
+    filteredProducts = filteredProducts.filter(product => product.strength === selectedStrength);
+  }
 
   // Sort products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case "price-low":
-        return a.price - b.price;
-      case "price-high":
-        return b.price - a.price;
-      case "name":
-        return a.name.localeCompare(b.name);
-      case "rating":
-        return b.rating - a.rating;
-      default: // popular
-        return b.rating - a.rating;
-    }
-  });
+  const sortedProducts = sortProducts(filteredProducts, sortBy);
 
   return (
     <div className="min-h-screen py-8">
@@ -205,7 +120,7 @@ const ShopPage = () => {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-muted-foreground">
-            Showing {sortedProducts.length} of {allProducts.length} products
+            Showing {sortedProducts.length} of {products.length} products
           </p>
         </div>
 

@@ -6,15 +6,15 @@ import ProductCard from "@/components/ProductCard";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
+import { useProducts } from "@/hooks/useProducts";
 import heroImage from "@/assets/hero-snus.jpg";
-import generalWhite from "@/assets/general-white.jpg";
-import siberia from "@/assets/siberia.jpg";
-import gotebergRape from "@/assets/goteborg-rape.jpg";
-import odens from "@/assets/odens.jpg";
 
 const HomePage = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
+  const { getFeaturedProducts, loading } = useProducts();
+  
+  const featuredProducts = getFeaturedProducts();
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,48 +40,6 @@ const HomePage = () => {
     });
   };
 
-  // Sample products data
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "General White Portion",
-      price: 4.99,
-      originalPrice: 6.99,
-      rating: 5,
-      image: generalWhite,
-      brand: "General",
-      strength: "Regular"
-    },
-    {
-      id: 2,
-      name: "Siberia White Dry",
-      price: 5.49,
-      rating: 4,
-      image: siberia,
-      brand: "Siberia",
-      strength: "Extra Strong"
-    },
-    {
-      id: 3,
-      name: "Göteborg Rapé White",
-      price: 4.79,
-      rating: 5,
-      image: gotebergRape,
-      brand: "Göteborg Rapé",
-      strength: "Regular"
-    },
-    {
-      id: 4,
-      name: "Odens Cold Dry",
-      price: 3.99,
-      originalPrice: 4.99,
-      rating: 4,
-      image: odens,
-      brand: "Odens",
-      strength: "Strong"
-    }
-  ];
-
   const features = [
     {
       icon: Truck,
@@ -90,7 +48,7 @@ const HomePage = () => {
     },
     {
       icon: Shield,
-      title: "Premium Quality",
+      title: "Premium Quality", 
       description: "Authentic products from trusted brands. Quality guaranteed."
     },
     {
