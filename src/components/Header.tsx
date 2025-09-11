@@ -92,13 +92,12 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">S</span>
+        <NavLink to="/" className="flex items-center">
+          <div className="flex h-8 px-3 items-center justify-center rounded-md bg-white border-2 border-black">
+            <span className="text-sm lg:text-base font-bold">
+              <span style={{ color: '#FF0000' }}>Ge</span><span style={{ color: '#000000' }}>Snus</span>
+            </span>
           </div>
-          <span className="text-xl font-bold text-foreground">
-            <span className="text-red-500">Ge</span><span className="text-white">Snus</span>
-          </span>
         </NavLink>
 
         {/* Desktop Navigation */}
