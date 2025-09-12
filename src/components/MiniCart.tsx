@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/useCart.tsx";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
+import { useComingSoon } from "@/hooks/useComingSoon.tsx";
 import { NavLink } from "react-router-dom";
 
 interface MiniCartProps {
@@ -14,6 +15,7 @@ interface MiniCartProps {
 const MiniCart = ({ isOpen, onClose }: MiniCartProps) => {
   const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const { t } = useTranslation();
+  const { showComingSoon } = useComingSoon();
 
   if (!isOpen) return null;
 
@@ -93,11 +95,16 @@ const MiniCart = ({ isOpen, onClose }: MiniCartProps) => {
                     {t("cart.mini.view_cart")}
                   </Button>
                 </NavLink>
-                <NavLink to="/checkout" onClick={onClose} className="block">
-                  <Button className="w-full">
-                    {t("cart.checkout")}
-                  </Button>
-                </NavLink>
+                <Button 
+                  className="w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showComingSoon();
+                    onClose();
+                  }}
+                >
+                  {t("cart.checkout")}
+                </Button>
               </div>
             </div>
           </>

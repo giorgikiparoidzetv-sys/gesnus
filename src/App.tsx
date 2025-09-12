@@ -15,6 +15,7 @@ import ContactPage from "@/pages/ContactPage";
 import CartPage from "@/pages/CartPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import OrderSuccessPage from "@/pages/OrderSuccessPage";
+import GamePage from "@/pages/GamePage";
 import NotFound from "./pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
 import DashboardPage from "@/pages/DashboardPage";
@@ -61,6 +62,7 @@ const App = () => {
                       <Route path="/cart" element={<CartPage />} />
                       <Route path="/checkout" element={<CheckoutPage />} />
                       <Route path="/order-success" element={<OrderSuccessPage />} />
+                      <Route path="/game" element={<GamePage />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route
                         path="/dashboard"

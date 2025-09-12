@@ -35,6 +35,7 @@ const Header = () => {
     { name: t("nav.shop"), path: "/shop" },
     { name: t("nav.about"), path: "/about" },
     { name: t("nav.contact"), path: "/contact" },
+    { name: t("nav.game"), path: "/game" },
   ];
 
   const handleSearch = (e: React.FormEvent) => {

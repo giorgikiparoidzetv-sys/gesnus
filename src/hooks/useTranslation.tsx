@@ -19,6 +19,7 @@ const translations = {
     "nav.login": "Login",
     "nav.dashboard": "My Account",
     "nav.cart": "Cart",
+    "nav.game": "Games",
     "header.search": "Search products...",
     "auth.login": "Login",
     "auth.register": "Register",
@@ -43,6 +44,7 @@ const translations = {
     "order.success.message": "Thank you for your purchase. Your order will be processed and shipped soon.",
     "order.success.continue": "Continue Shopping",
     "common.error": "Error",
+    "common.coming_soon": "Will Be Soon",
   },
   ka: {
     "nav.home": "მთავარი",
@@ -52,6 +54,7 @@ const translations = {
     "nav.login": "შესვლა",
     "nav.dashboard": "ჩემი ანგარიში",
     "nav.cart": "კალათა",
+    "nav.game": "გათამაშება",
     "header.search": "პროდუქტების ძიება...",
     "auth.login": "შესვლა",
     "auth.register": "რეგისტრაცია",
@@ -76,6 +79,7 @@ const translations = {
     "order.success.message": "გმადლობთ შენაძენისთვის. თქვენი შეკვეთა დამუშავდება და მალე გამოგეგზავნებათ.",
     "order.success.continue": "შოპინგის გაგრძელება",
     "common.error": "შეცდომა",
+    "common.coming_soon": "მალე დაემატება",
   },
 };
 

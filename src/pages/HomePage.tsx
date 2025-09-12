@@ -79,7 +79,7 @@ const HomePage = () => {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="bg-white text-black border-gray-300 hover:bg-gray-100">
+                <Button asChild size="lg" variant="outline" className="bg-white text-black border-gray-300">
                   <Link to="/about">{t("home.hero.learn")}</Link>
                 </Button>
               </div>

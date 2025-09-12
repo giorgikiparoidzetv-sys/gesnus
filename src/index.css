@@ -138,21 +138,125 @@ All colors MUST be HSL.
 @layer components {
   /* Product Card Animations */
   .product-card {
-    @apply transition-all duration-300 hover:transform hover:scale-105;
-    box-shadow: var(--shadow-product);
-  }
-  
-  .product-card:hover {
-    box-shadow: var(--shadow-hover);
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
 
-  /* Hero Section */
+  /* Hero Section Gradient */
   .hero-gradient {
-    background: var(--gradient-hero);
+    background: linear-gradient(135deg, hsl(var(--tobacco-dark)) 0%, hsl(var(--primary)) 50%, hsl(var(--tobacco-light)) 100%);
+    position: relative;
+    overflow: hidden;
   }
 
+  .hero-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, hsl(var(--gold-primary) / 0.1) 50%, transparent 100%);
+    animation: shimmer 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  /* Gold Gradient Cards */
   .gold-gradient {
-    background: var(--gradient-gold);
+    background: linear-gradient(135deg, hsl(var(--gold-primary)) 0%, hsl(var(--gold-light)) 100%);
+    border: 1px solid hsl(var(--gold-primary) / 0.3);
+  }
+
+  /* Button Animations */
+  .btn-hero {
+    @apply bg-secondary text-primary font-semibold hover:bg-accent hover:scale-105;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px hsl(var(--secondary) / 0.3);
+  }
+
+  .btn-hero:hover {
+    box-shadow: 0 8px 20px hsl(var(--secondary) / 0.4);
+  }
+
+  .btn-premium {
+    background: linear-gradient(135deg, hsl(var(--gold-primary)) 0%, hsl(var(--secondary)) 100%);
+    @apply text-primary font-semibold hover:scale-105;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 6px 20px hsl(var(--gold-primary) / 0.4);
+  }
+
+  /* Hover effects for interactive elements */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Navigation Link Animations */
+  .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: hsl(var(--primary));
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Cart animations */
+  .cart-item-enter {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Loading animations */
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 
   /* Smooth Transitions */
@@ -162,15 +266,5 @@ All colors MUST be HSL.
 
   .transition-bounce {
     transition: var(--transition-bounce);
-  }
-
-  /* Custom Button Styles */
-  .btn-hero {
-    @apply bg-secondary text-secondary-foreground hover:bg-accent transition-smooth;
-  }
-
-  .btn-premium {
-    background: var(--gradient-gold);
-    @apply text-primary font-semibold transition-smooth hover:scale-105;
   }
 }

@@ -27,45 +27,11 @@ const CheckoutPage = () => {
       return;
     }
 
-    setIsProcessing(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-        body: {
-          items: items.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          customer_email: user?.email || "guest@example.com",
-        },
-      });
-
-      if (error) {
-        console.error('Checkout error:', error);
-        toast({
-          title: t("common.error"),
-          description: "Failed to create checkout session",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data?.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      toast({
-        title: t("common.error"),
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
-    }
+    // Show coming soon message instead of actual checkout
+    toast({
+      title: t("common.coming_soon"),
+      description: t("common.coming_soon"),
+    });
   };
 
   if (items.length === 0) {

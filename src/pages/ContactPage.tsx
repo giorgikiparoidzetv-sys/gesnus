@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
+import { useComingSoon } from "@/hooks/useComingSoon.tsx";
 
 const ContactPage = () => {
+  const { showComingSoon } = useComingSoon();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -53,53 +54,11 @@ const ContactPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const { supabase } = await import("@/integrations/supabase/client");
-      
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: formData
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      toast({
-        title: "Message sent!",
-        description: "Thank you for contacting us. We'll get back to you within 24 hours.",
-      });
-      
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: ""
-      });
-    } catch (error: any) {
-      console.error('Error submitting contact form:', error);
-      toast({
-        title: "Error sending message",
-        description: "There was a problem sending your message. Please try again or contact us directly.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    showComingSoon();
   };
 
   const handleCallInstead = () => {
-    toast({
-      title: "Call us",
-      description: "You can reach us at +46 8 123 456 78 during business hours.",
-    });
-    // Optionally try to initiate a call on mobile devices
-    if (window.navigator && 'vibrate' in window.navigator) {
-      window.location.href = "tel:+46812345678";
-    }
+    showComingSoon();
   };
 
   return (
@@ -241,8 +200,8 @@ const ContactPage = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button type="submit" size="lg" className="flex-1" disabled={isSubmitting}>
-                      {isSubmitting ? "Sending..." : "Send Message"}
+                    <Button type="submit" size="lg" className="flex-1">
+                      Send Message
                     </Button>
                     <Button type="button" variant="outline" size="lg" onClick={handleCallInstead}>
                       Call Instead
