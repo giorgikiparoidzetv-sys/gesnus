@@ -14,7 +14,7 @@ const CartPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t("cart.title")} - SnusShop</title>
+        <title>{t("cart.title")} - GeSnus</title>
         <meta name="description" content="Review your selected snus products before checkout" />
         <link rel="canonical" href={`${window.location.origin}/cart`} />
       </Helmet>

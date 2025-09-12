@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useComingSoon } from "@/hooks/useComingSoon.tsx";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 
 const ContactPage = () => {
   const { showComingSoon } = useComingSoon();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -26,27 +28,27 @@ const ContactPage = () => {
   const contactInfo = [
     {
       icon: Mail,
-      title: "Email Us",
-      content: "support@snusshop.com",
-      description: "We respond within 24 hours"
+      title: t("contact.email.title"),
+      content: "gesnusge@gmail.com",
+      description: t("contact.email.desc")
     },
     {
       icon: Phone,
-      title: "Call Us",
-      content: "+46 8 123 456 78",
-      description: "Monday - Friday, 9AM - 6PM CET"
+      title: t("contact.phone.title"),
+      content: "+995 557 122 342",
+      description: t("contact.phone.desc")
     },
     {
       icon: MapPin,
-      title: "Visit Us",
-      content: "Drottninggatan 123, Stockholm, Sweden",
-      description: "Showroom by appointment"
+      title: t("contact.address.title"),
+      content: t("contact.address.content"),
+      description: t("contact.address.desc")
     },
     {
       icon: Clock,
-      title: "Support Hours",
-      content: "24/7 Online Support",
-      description: "Live chat available"
+      title: t("contact.hours.title"),
+      content: t("contact.hours.content"),
+      description: t("contact.hours.desc")
     }
   ];
 
@@ -67,18 +69,17 @@ const ContactPage = () => {
         {/* Header */}
         <section className="text-center py-16">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            Get in Touch
+            {t("contact.title")}
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have a question about our products or need assistance with your order? 
-            We're here to help and would love to hear from you.
+            {t("contact.subtitle")}
           </p>
         </section>
 
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-6">
-            <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("contact.info")}</h2>
             
             {contactInfo.map((info, index) => (
               <Card key={index} className="border-0 shadow-lg">
@@ -100,20 +101,20 @@ const ContactPage = () => {
             {/* FAQ Section */}
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="text-lg">Frequently Asked Questions</CardTitle>
+                <CardTitle className="text-lg">{t("contact.faq.title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-sm">Do you ship internationally?</h4>
-                  <p className="text-sm text-muted-foreground">Yes, we ship to over 40 countries worldwide.</p>
+                  <h4 className="font-medium text-sm">{t("contact.faq.shipping")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("contact.faq.shipping.answer")}</p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm">What are your shipping times?</h4>
-                  <p className="text-sm text-muted-foreground">2-5 business days for EU, 5-10 days elsewhere.</p>
+                  <h4 className="font-medium text-sm">{t("contact.faq.time")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("contact.faq.time.answer")}</p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm">Do you offer bulk discounts?</h4>
-                  <p className="text-sm text-muted-foreground">Yes, contact us for bulk pricing options.</p>
+                  <h4 className="font-medium text-sm">{t("contact.faq.bulk")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("contact.faq.bulk.answer")}</p>
                 </div>
               </CardContent>
             </Card>
@@ -123,16 +124,16 @@ const ContactPage = () => {
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="text-2xl">Send us a Message</CardTitle>
+                <CardTitle className="text-2xl">{t("contact.form.title")}</CardTitle>
                 <p className="text-muted-foreground">
-                  Fill out the form below and we'll get back to you as soon as possible.
+                  {t("contact.form.subtitle")}
                 </p>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name *</Label>
+                      <Label htmlFor="firstName">{t("contact.form.first_name")} *</Label>
                       <Input
                         id="firstName"
                         placeholder="John"
@@ -142,7 +143,7 @@ const ContactPage = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name *</Label>
+                      <Label htmlFor="lastName">{t("contact.form.last_name")} *</Label>
                       <Input
                         id="lastName"
                         placeholder="Doe"
@@ -154,7 +155,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
+                    <Label htmlFor="email">{t("contact.form.email")} *</Label>
                     <Input
                       id="email"
                       type="email"
@@ -166,18 +167,18 @@ const ContactPage = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">{t("contact.form.phone")}</Label>
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="+46 70 123 45 67"
+                      placeholder="+995 557 123 456"
                       value={formData.phone}
                       onChange={handleInputChange}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="subject">Subject *</Label>
+                    <Label htmlFor="subject">{t("contact.form.subject")} *</Label>
                     <Input
                       id="subject"
                       placeholder="How can we help you?"
@@ -188,7 +189,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message">Message *</Label>
+                    <Label htmlFor="message">{t("contact.form.message")} *</Label>
                     <Textarea
                       id="message"
                       placeholder="Tell us more about your inquiry..."
@@ -201,10 +202,10 @@ const ContactPage = () => {
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button type="submit" size="lg" className="flex-1">
-                      Send Message
+                      {t("contact.form.send")}
                     </Button>
                     <Button type="button" variant="outline" size="lg" onClick={handleCallInstead}>
-                      Call Instead
+                      {t("contact.form.call")}
                     </Button>
                   </div>
                 </form>
@@ -214,23 +215,20 @@ const ContactPage = () => {
             {/* Business Hours */}
             <Card className="border-0 shadow-lg mt-6">
               <CardHeader>
-                <CardTitle>Business Hours</CardTitle>
+                <CardTitle>{t("contact.business_hours")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-medium mb-2">Customer Support</h4>
+                    <h4 className="font-medium mb-2">{t("contact.support_hours")}</h4>
                     <div className="space-y-1 text-sm text-muted-foreground">
-                      <p>Monday - Friday: 9:00 AM - 6:00 PM CET</p>
-                      <p>Saturday: 10:00 AM - 4:00 PM CET</p>
-                      <p>Sunday: Closed</p>
+                      <p>{t("contact.support_247")}</p>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2">Order Processing</h4>
+                    <h4 className="font-medium mb-2">{t("contact.office_hours")}</h4>
                     <div className="space-y-1 text-sm text-muted-foreground">
-                      <p>Monday - Friday: 8:00 AM - 5:00 PM CET</p>
-                      <p>Orders placed after hours are processed next business day</p>
+                      <p>08:00 — 03:00</p>
                     </div>
                   </div>
                 </div>

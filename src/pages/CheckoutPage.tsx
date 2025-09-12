@@ -38,7 +38,7 @@ const CheckoutPage = () => {
     return (
       <>
         <Helmet>
-          <title>{t("checkout.title")} - SnusShop</title>
+          <title>{t("checkout.title")} - GeSnus</title>
           <meta name="description" content="Complete your snus purchase securely" />
           <link rel="canonical" href={`${window.location.origin}/checkout`} />
         </Helmet>
@@ -61,7 +61,7 @@ const CheckoutPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t("checkout.title")} - SnusShop</title>
+        <title>{t("checkout.title")} - GeSnus</title>
         <meta name="description" content="Complete your snus purchase securely with Stripe" />
         <link rel="canonical" href={`${window.location.origin}/checkout`} />
       </Helmet>

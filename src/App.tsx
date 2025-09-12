@@ -18,6 +18,7 @@ import OrderSuccessPage from "@/pages/OrderSuccessPage";
 import GamePage from "@/pages/GamePage";
 import NotFound from "./pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import DashboardPage from "@/pages/DashboardPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/hooks/useCart.tsx";
@@ -64,6 +65,7 @@ const App = () => {
                       <Route path="/order-success" element={<OrderSuccessPage />} />
                       <Route path="/game" element={<GamePage />} />
                       <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/reset-password" element={<ResetPasswordPage />} />
                       <Route
                         path="/dashboard"
                         element={

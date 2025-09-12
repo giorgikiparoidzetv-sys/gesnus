@@ -95,7 +95,7 @@ const handler = async (req: Request): Promise<Response> => {
         to: [{ email: contactEmail }],
         subject: `Contact Form: ${sanitizedData.subject}`
       }],
-      from: { email: "noreply@snusshop.com", name: "SnusShop Contact Form" },
+      from: { email: "noreply@gesnusge.com", name: "GeSnus Contact Form" },
       content: [{
         type: "text/html",
         value: `
@@ -112,7 +112,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           <hr style="margin: 20px 0;">
           <p style="color: #666; font-size: 12px;">
-            This message was submitted through the SnusShop contact form at ${new Date().toLocaleString()}.
+            This message was submitted through the GeSnus contact form at ${new Date().toLocaleString()}.
             Message ID: ${savedMessage.id}
           </p>
         `

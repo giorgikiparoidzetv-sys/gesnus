@@ -32,7 +32,7 @@ const AboutPage = () => {
         {/* Hero Section */}
         <section className="text-center py-16">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            About <span className="text-primary">SnusShop</span>
+            About <span className="text-primary">GeSnus</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Since 2015, we've been the world's leading online retailer of premium Swedish snus, 
@@ -47,7 +47,7 @@ const AboutPage = () => {
               <h2 className="text-3xl font-bold">Our Story</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Founded in Stockholm by Swedish snus enthusiasts, SnusShop began as a passion project 
+                  Founded in Stockholm by Swedish snus enthusiasts, GeSnus began as a passion project 
                   to share the authentic Swedish snus experience with the world. What started as a small 
                   operation has grown into the most trusted online snus retailer globally.
                 </p>

@@ -19,7 +19,7 @@ const OrderSuccessPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t("order.success.title")} - SnusShop</title>
+        <title>{t("order.success.title")} - GeSnus</title>
         <meta name="description" content="Your order has been successfully placed and is being processed" />
         <link rel="canonical" href={`${window.location.origin}/order-success`} />
       </Helmet>

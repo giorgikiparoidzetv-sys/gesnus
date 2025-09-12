@@ -45,14 +45,14 @@ const AuthPage = () => {
 
   useEffect(() => {
     // Basic SEO
-    document.title = tab === 'login' ? 'Login | SnusShop' : 'Sign Up | SnusShop';
+    document.title = tab === 'login' ? 'Login | GeSnus' : 'Sign Up | GeSnus';
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Secure account authentication for SnusShop. Login or register to manage your orders.');
+      metaDesc.setAttribute('content', 'Secure account authentication for GeSnus. Login or register to manage your orders.');
     } else {
       const m = document.createElement('meta');
       m.name = 'description';
-      m.content = 'Secure account authentication for SnusShop. Login or register to manage your orders.';
+      m.content = 'Secure account authentication for GeSnus. Login or register to manage your orders.';
       document.head.appendChild(m);
     }
     const linkCanonical = document.querySelector('link[rel="canonical"]');
@@ -118,7 +118,7 @@ const AuthPage = () => {
 
   const onResetPassword = async (values: ResetPasswordValues) => {
     try {
-      const redirectUrl = `${window.location.origin}/auth`;
+      const redirectUrl = `${window.location.origin}/reset-password`;
       const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
         redirectTo: redirectUrl,
       });

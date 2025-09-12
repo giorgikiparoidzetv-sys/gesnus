@@ -20,10 +20,10 @@ const DashboardPage = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
-    document.title = 'Dashboard | SnusShop';
+    document.title = 'Dashboard | GeSnus';
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Your SnusShop account dashboard. View profile info and manage your session.');
+      metaDesc.setAttribute('content', 'Your GeSnus account dashboard. View profile info and manage your session.');
     }
   }, []);
 
