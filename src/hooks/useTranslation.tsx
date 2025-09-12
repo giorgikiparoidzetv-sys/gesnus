@@ -19,7 +19,7 @@ const translations = {
     "nav.login": "Login",
     "nav.dashboard": "My Account",
     "nav.cart": "Cart",
-    "nav.game": "Games",
+    "nav.game": "Giveaway",
     "header.search": "Search products...",
     "auth.login": "Login",
     "auth.register": "Register",
