@@ -48,7 +48,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           />
           {product.salePrice && (
             <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-medium">
-              Sale
+              {t("product.sale")}
             </div>
           )}
         </div>
@@ -66,7 +66,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           </h3>
 
           {product.strength && (
-            <p className="text-xs text-tobacco-light">Strength: {product.strength}</p>
+            <p className="text-xs text-tobacco-light">{t("product.strength")}: {product.strength}</p>
           )}
 
           {/* Rating */}

@@ -41,18 +41,18 @@ const Header = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Search Error",
-        description: "Please enter a search term",
-      });
+    toast({
+      variant: "destructive",
+      title: t("search.error"),
+      description: t("search.enter_term"),
+    });
       return;
     }
     navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
     setSearchQuery("");
     toast({
-      title: "Search initiated",
-      description: `Searching for "${searchQuery}"`,
+      title: t("search.initiated"),
+      description: `${t("search.searching")} "${searchQuery}"`,
     });
   };
 
@@ -61,16 +61,16 @@ const Header = () => {
       cleanupAuthState();
       try { await supabase.auth.signOut({ scope: 'global' }); } catch {}
       toast({
-        title: "Logged out",
-        description: "You have been successfully logged out",
+        title: t("auth.logout_success"),
+        description: t("auth.logout_success.desc"),
       });
       // Full reload to ensure a clean state
       window.location.href = '/auth';
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Logout failed",
-        description: error?.message || "Please try again",
+        title: t("auth.logout_failed"),
+        description: error?.message || t("auth.logout_failed.desc"),
       });
     }
   };

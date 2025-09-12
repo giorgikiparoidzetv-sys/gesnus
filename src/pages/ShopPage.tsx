@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
+import SEOHead from "@/components/SEOHead";
 import {
   Select,
   SelectContent,
@@ -14,6 +16,7 @@ import {
 } from "@/components/ui/select";
 
 const ShopPage = () => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("all");
   const [selectedStrength, setSelectedStrength] = useState("all");
@@ -50,9 +53,9 @@ const ShopPage = () => {
       <div className="container mx-auto px-4">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Shop All Products</h1>
+          <h1 className="text-4xl font-bold mb-4">{t("shop.title")}</h1>
           <p className="text-muted-foreground text-lg">
-            Discover our complete collection of premium snus products
+            {t("shop.subtitle")}
           </p>
         </div>
 
@@ -65,7 +68,7 @@ const ShopPage = () => {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search products..."
+                  placeholder={t("shop.search")}
                   className="pl-10"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,12 +78,12 @@ const ShopPage = () => {
               {/* Brand Filter */}
               <Select value={selectedBrand} onValueChange={setSelectedBrand}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Brands" />
+                  <SelectValue placeholder={t("shop.all_brands")} />
                 </SelectTrigger>
                 <SelectContent>
                   {brands.map((brand) => (
                     <SelectItem key={brand} value={brand}>
-                      {brand === "all" ? "All Brands" : brand}
+                      {brand === "all" ? t("shop.all_brands") : brand}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -89,12 +92,12 @@ const ShopPage = () => {
               {/* Strength Filter */}
               <Select value={selectedStrength} onValueChange={setSelectedStrength}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Strengths" />
+                  <SelectValue placeholder={t("shop.all_strengths")} />
                 </SelectTrigger>
                 <SelectContent>
                   {strengths.map((strength) => (
                     <SelectItem key={strength} value={strength}>
-                      {strength === "all" ? "All Strengths" : strength}
+                      {strength === "all" ? t("shop.all_strengths") : strength}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -103,14 +106,14 @@ const ShopPage = () => {
               {/* Sort */}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder={t("shop.sort_by")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="popular">Most Popular</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="name">Name A-Z</SelectItem>
-                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="popular">{t("shop.most_popular")}</SelectItem>
+                  <SelectItem value="price-low">{t("shop.price_low")}</SelectItem>
+                  <SelectItem value="price-high">{t("shop.price_high")}</SelectItem>
+                  <SelectItem value="name">{t("shop.name_az")}</SelectItem>
+                  <SelectItem value="rating">{t("shop.highest_rated")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -120,7 +123,7 @@ const ShopPage = () => {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-muted-foreground">
-            Showing {sortedProducts.length} of {products.length} products
+            {t("shop.showing")} {sortedProducts.length} {t("shop.of")} {products.length} {t("shop.products")}
           </p>
         </div>
 
@@ -139,9 +142,9 @@ const ShopPage = () => {
           <Card className="p-12 text-center">
             <div className="space-y-4">
               <Filter className="h-12 w-12 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold">No products found</h3>
+              <h3 className="text-xl font-semibold">{t("shop.no_products")}</h3>
               <p className="text-muted-foreground">
-                Try adjusting your search or filter criteria
+                {t("shop.no_products.desc")}
               </p>
               <Button
                 variant="outline"
@@ -152,7 +155,7 @@ const ShopPage = () => {
                   setSortBy("popular");
                 }}
               >
-                Clear Filters
+                {t("shop.clear_filters")}
               </Button>
             </div>
           </Card>
@@ -162,7 +165,7 @@ const ShopPage = () => {
         {sortedProducts.length > 0 && sortedProducts.length >= 8 && (
           <div className="text-center mt-12">
             <Button variant="outline" size="lg">
-              Load More Products
+              {t("shop.load_more")}
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </div>

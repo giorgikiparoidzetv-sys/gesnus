@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
+import { useTranslation } from "@/hooks/useTranslation.tsx";
 
 const ProductPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -47,7 +49,7 @@ const ProductPage = () => {
     return (
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center">Loading...</div>
+          <div className="text-center">{t("product.loading")}</div>
         </div>
       </div>
     );
@@ -57,7 +59,7 @@ const ProductPage = () => {
     return (
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center">Product not found</div>
+          <div className="text-center">{t("product.not_found")}</div>
         </div>
       </div>
     );
@@ -73,7 +75,7 @@ const ProductPage = () => {
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-muted-foreground">
-          <span>Home</span> / <span>Shop</span> / <span>General</span> / 
+          <span>{t("breadcrumb.home")}</span> / <span>{t("breadcrumb.shop")}</span> / <span>{t("breadcrumb.general")}</span> / 
           <span className="text-foreground"> {product.name}</span>
         </nav>
 
@@ -99,9 +101,9 @@ const ProductPage = () => {
             <div className="flex items-center justify-between">
               <Badge variant="secondary">{product.brand}</Badge>
               {product.stock > 0 ? (
-                <Badge className="bg-green-100 text-green-800 border-green-200">In Stock ({product.stock})</Badge>
+                <Badge className="bg-green-100 text-green-800 border-green-200">{t("product.in_stock")} ({product.stock})</Badge>
               ) : (
-                <Badge variant="destructive">Out of Stock</Badge>
+                <Badge variant="destructive">{t("product.out_of_stock")}</Badge>
               )}
             </div>
 
@@ -128,7 +130,7 @@ const ProductPage = () => {
               )}
               {product.salePrice && (
                 <Badge variant="destructive">
-                  Save ${(product.price - product.salePrice).toFixed(2)}
+                  {t("product.save")} ${(product.price - product.salePrice).toFixed(2)}
                 </Badge>
               )}
             </div>
@@ -139,26 +141,26 @@ const ProductPage = () => {
             {/* Key Features */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-sm text-muted-foreground">Strength:</span>
+                <span className="text-sm text-muted-foreground">{t("product.strength")}:</span>
                 <p className="font-medium">{product.strength}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Nicotine:</span>
+                <span className="text-sm text-muted-foreground">{t("product.nicotine")}:</span>
                 <p className="font-medium">{product.nicotineMg}mg/g</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Category:</span>
+                <span className="text-sm text-muted-foreground">{t("product.category")}:</span>
                 <p className="font-medium">{product.category}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">SKU:</span>
+                <span className="text-sm text-muted-foreground">{t("product.sku")}:</span>
                 <p className="font-medium">{product.sku}</p>
               </div>
             </div>
 
             {/* Quantity Selector */}
             <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium">Quantity:</span>
+              <span className="text-sm font-medium">{t("product.quantity")}:</span>
               <div className="flex items-center border rounded-lg">
                 <Button
                   variant="ghost"
@@ -183,15 +185,15 @@ const ProductPage = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="flex-1" disabled={product.stock === 0} onClick={handleAddToCart}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Add to Cart - ${((product.salePrice || product.price) * quantity).toFixed(2)}
+                {t("product.add_to_cart")} - ${((product.salePrice || product.price) * quantity).toFixed(2)}
               </Button>
               <Button variant="outline" size="lg">
                 <Heart className="mr-2 h-4 w-4" />
-                Wishlist
+                {t("product.wishlist")}
               </Button>
               <Button variant="outline" size="lg">
                 <Share2 className="mr-2 h-4 w-4" />
-                Share
+                {t("product.share")}
               </Button>
             </div>
 
@@ -199,15 +201,15 @@ const ProductPage = () => {
             <div className="grid grid-cols-3 gap-4 pt-6 border-t">
               <div className="text-center">
                 <Shield className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <p className="text-xs text-muted-foreground">Authentic Product</p>
+                <p className="text-xs text-muted-foreground">{t("product.authentic")}</p>
               </div>
               <div className="text-center">
                 <Truck className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <p className="text-xs text-muted-foreground">Fast Shipping</p>
+                <p className="text-xs text-muted-foreground">{t("product.fast_shipping")}</p>
               </div>
               <div className="text-center">
                 <RefreshCw className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <p className="text-xs text-muted-foreground">Easy Returns</p>
+                <p className="text-xs text-muted-foreground">{t("product.easy_returns")}</p>
               </div>
             </div>
           </div>
@@ -219,7 +221,7 @@ const ProductPage = () => {
             <div className="space-y-8">
               {/* Description */}
               <div>
-                <h3 className="text-xl font-semibold mb-4">Description</h3>
+                <h3 className="text-xl font-semibold mb-4">{t("product.description")}</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {product.longDescription}
                 </p>
@@ -227,30 +229,30 @@ const ProductPage = () => {
 
               {/* Product Details */}
               <div>
-                <h3 className="text-xl font-semibold mb-4">Product Details</h3>
+                <h3 className="text-xl font-semibold mb-4">{t("product.details")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Brand:</span>
+                    <span className="text-muted-foreground">{t("product.brand")}:</span>
                     <span className="font-medium">{product.brand}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Strength:</span>
+                    <span className="text-muted-foreground">{t("product.strength")}:</span>
                     <span className="font-medium">{product.strength}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Nicotine:</span>
+                    <span className="text-muted-foreground">{t("product.nicotine")}:</span>
                     <span className="font-medium">{product.nicotineMg}mg/g</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Category:</span>
+                    <span className="text-muted-foreground">{t("product.category")}:</span>
                     <span className="font-medium">{product.category}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Currency:</span>
+                    <span className="text-muted-foreground">{t("product.currency")}:</span>
                     <span className="font-medium">{product.currency}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">SKU:</span>
+                    <span className="text-muted-foreground">{t("product.sku")}:</span>
                     <span className="font-medium">{product.sku}</span>
                   </div>
                 </div>
@@ -261,7 +263,7 @@ const ProductPage = () => {
 
         {/* Recommended Products */}
         <section>
-          <h2 className="text-2xl font-bold mb-8">You might also like</h2>
+          <h2 className="text-2xl font-bold mb-8">{t("product.recommended")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendedProducts.map((product) => (
               <ProductCard

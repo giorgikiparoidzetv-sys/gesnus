@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
 import { useProducts } from "@/hooks/useProducts";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/hero-snus.jpg";
 
 const HomePage = () => {
@@ -21,45 +22,46 @@ const HomePage = () => {
     if (!email.trim()) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Please enter a valid email address",
+        title: t("common.error"),
+        description: t("auth.invalid_email"),
       });
       return;
     }
     toast({
-      title: "Success!",
-      description: "You've been successfully subscribed to our newsletter",
+      title: t("common.success"),
+      description: t("home.newsletter.success"),
     });
     setEmail("");
   };
 
   const handleAddToCart = (product: any) => {
     toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart`,
+      title: t("cart.added"),
+      description: `${product.name} ${t("cart.added.desc")}`,
     });
   };
 
   const features = [
     {
       icon: Truck,
-      title: "Fast Shipping",
-      description: "Free shipping on orders over $50. Express delivery available."
+      title: t("home.features.shipping"),
+      description: t("home.features.shipping.desc")
     },
     {
       icon: Shield,
-      title: "Premium Quality", 
-      description: "Authentic products from trusted brands. Quality guaranteed."
+      title: t("home.features.quality"), 
+      description: t("home.features.quality.desc")
     },
     {
       icon: Headphones,
-      title: "Customer Support",
-      description: "24/7 customer service. We're here to help with any questions."
+      title: t("home.features.support"),
+      description: t("home.features.support.desc")
     }
   ];
 
   return (
     <div className="min-h-screen">
+      <SEOHead />
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-20 lg:py-32">
         <div className="container mx-auto px-4">
@@ -105,7 +107,7 @@ const HomePage = () => {
               {t("home.bestsellers")}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Our most popular snus products, loved by customers worldwide
+              {t("home.bestsellers.subtitle")}
             </p>
           </div>
           
@@ -122,7 +124,7 @@ const HomePage = () => {
           <div className="text-center">
             <Button asChild size="lg" variant="outline">
               <Link to="/shop">
-                View All Products
+                {t("shop.view_all")}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -135,10 +137,10 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Why Choose Us
+              {t("home.features.title")}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We're committed to providing the best snus shopping experience
+              {t("home.features.subtitle")}
             </p>
           </div>
           
@@ -164,22 +166,22 @@ const HomePage = () => {
           <Card className="max-w-4xl mx-auto gold-gradient text-primary p-8 lg:p-12">
             <div className="text-center space-y-6">
               <h2 className="text-3xl lg:text-4xl font-bold">
-                Stay Updated
+                {t("home.newsletter.title")}
               </h2>
               <p className="text-lg opacity-90 max-w-2xl mx-auto">
-                Subscribe to our newsletter for exclusive offers, new product launches, and snus tips
+                {t("home.newsletter.subtitle")}
               </p>
               <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t("home.newsletter.placeholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 px-4 py-3 rounded-lg border-0 text-foreground"
                   required
                 />
                 <Button type="submit" variant="secondary" size="lg">
-                  Subscribe
+                  {t("home.newsletter.subscribe")}
                 </Button>
               </form>
             </div>
