@@ -30,13 +30,18 @@ const loginSchema = z.object({
   remember: z.boolean().default(true),
 });
 
+const resetPasswordSchema = z.object({
+  email: emailSchema,
+});
+
 type SignUpValues = z.infer<typeof signupSchema>;
 type LoginValues = z.infer<typeof loginSchema>;
+type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 
 const AuthPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<'login' | 'signup'>('login');
+  const [tab, setTab] = useState<'login' | 'signup' | 'reset'>('login');
 
   useEffect(() => {
     // Basic SEO
@@ -61,6 +66,7 @@ const AuthPage = () => {
 
   const signupForm = useForm<SignUpValues>({ resolver: zodResolver(signupSchema), defaultValues: { email: '', password: '', fullName: '' } });
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: '', password: '', remember: true } });
+  const resetForm = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), defaultValues: { email: '' } });
 
   const onSignup = async (values: SignUpValues) => {
     try {
@@ -110,6 +116,28 @@ const AuthPage = () => {
     }
   };
 
+  const onResetPassword = async (values: ResetPasswordValues) => {
+    try {
+      const redirectUrl = `${window.location.origin}/auth`;
+      const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
+        redirectTo: redirectUrl,
+      });
+      if (error) throw error;
+
+      toast({ 
+        title: 'Password reset email sent', 
+        description: 'Check your inbox for a link to reset your password.' 
+      });
+      setTab('login');
+    } catch (err: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Reset failed', 
+        description: err?.message || 'Please try again.' 
+      });
+    }
+  };
+
   return (
     <main className="container py-10">
       <section className="mx-auto max-w-md">
@@ -118,7 +146,7 @@ const AuthPage = () => {
           <p className="text-sm text-muted-foreground">Login or create your account</p>
         </header>
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as 'login' | 'signup')} className="w-full">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as 'login' | 'signup' | 'reset')} className="w-full">
           <TabsList className="grid grid-cols-2 w-full">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -145,6 +173,13 @@ const AuthPage = () => {
                   <input type="checkbox" className="h-4 w-4" defaultChecked {...loginForm.register('remember')} />
                   Remember me
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setTab('reset')}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
               </div>
               <Button type="submit" className="w-full">Login</Button>
             </form>
@@ -176,6 +211,34 @@ const AuthPage = () => {
               <Button type="submit" className="w-full">Create account</Button>
               <p className="text-xs text-muted-foreground text-center">By creating an account, you agree to receive a verification email.</p>
             </form>
+          </TabsContent>
+
+          <TabsContent value="reset" className="mt-6">
+            <div className="space-y-4">
+              <div className="text-center space-y-2">
+                <h2 className="text-lg font-semibold">Reset Password</h2>
+                <p className="text-sm text-muted-foreground">
+                  Enter your email and we'll send you a link to reset your password.
+                </p>
+              </div>
+              <form onSubmit={resetForm.handleSubmit(onResetPassword)} className="space-y-4" aria-label="Reset password form">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Email</Label>
+                  <Input id="reset-email" type="email" autoComplete="email" {...resetForm.register('email')} />
+                  {resetForm.formState.errors.email && (
+                    <p className="text-sm text-destructive">{resetForm.formState.errors.email.message}</p>
+                  )}
+                </div>
+                <Button type="submit" className="w-full">Send Reset Link</Button>
+                <button
+                  type="button"
+                  onClick={() => setTab('login')}
+                  className="w-full text-sm text-muted-foreground hover:text-foreground underline"
+                >
+                  Back to Login
+                </button>
+              </form>
+            </div>
           </TabsContent>
         </Tabs>
       </section>
