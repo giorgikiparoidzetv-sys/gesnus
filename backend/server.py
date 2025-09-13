@@ -434,6 +434,64 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     }
 
 
+# Order endpoints
+@api_router.post("/order", response_model=OrderResponse)
+async def create_order(order: Order):
+    """Create a new order and send notification email"""
+    try:
+        # Generate unique order ID
+        order_id = f"GS{datetime.utcnow().strftime('%Y%m%d')}{str(uuid.uuid4())[:8].upper()}"
+        
+        # Create order document
+        order_doc = {
+            "id": order_id,
+            "fullName": order.fullName,
+            "email": order.email,
+            "address": order.address,
+            "phone": order.phone,
+            "totalAmount": order.totalAmount,
+            "items": [item.dict() for item in order.items],
+            "status": "pending",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+        }
+        
+        # Save order to database
+        saved = await save_order(order_doc)
+        if not saved:
+            raise HTTPException(status_code=500, detail="Failed to save order")
+        
+        # Send notification email (non-blocking - don't fail if email fails)
+        try:
+            send_order_email(order, order_id)
+        except Exception as e:
+            logging.error(f"Email sending failed for order {order_id}: {e}")
+            # Continue anyway - order is saved
+        
+        return OrderResponse(
+            success=True,
+            message="Order created successfully",
+            orderId=order_id
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Order creation error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create order")
+
+@api_router.get("/orders", response_model=List[dict])
+async def get_orders(current_user: dict = Depends(get_current_user)):
+    """Get orders for the current user (admin feature)"""
+    try:
+        # For now, return all orders (in production, add proper admin role checking)
+        orders = await db.orders.find().sort("created_at", -1).to_list(100)
+        return orders
+    except Exception as e:
+        logging.error(f"Error fetching orders: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orders")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
