@@ -20,6 +20,8 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ConfirmEmailPage from "@/pages/ConfirmEmailPage";
+import PaymentInfoPage from "@/pages/PaymentInfoPage";
+import BankInfoPage from "@/pages/BankInfoPage";
 import DashboardPage from "@/pages/DashboardPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/hooks/useCart.tsx";
