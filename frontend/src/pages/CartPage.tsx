@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart.tsx";
 import { useTranslation } from "@/hooks/useTranslation.tsx";
 import { NavLink } from "react-router-dom";
+import PayButton from "@/components/PayButton";
 
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
