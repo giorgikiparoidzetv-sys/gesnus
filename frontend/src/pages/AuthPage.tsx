@@ -73,7 +73,7 @@ const AuthPage = () => {
       cleanupAuthState();
       try { await supabase.auth.signOut({ scope: 'global' }); } catch {}
 
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/confirm-email`;
       const { error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
