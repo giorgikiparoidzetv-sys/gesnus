@@ -80,6 +80,25 @@ class ConfirmEmailResponse(BaseModel):
     success: bool
     message: str
 
+class OrderItem(BaseModel):
+    id: str
+    name: str
+    quantity: int
+    price: float
+
+class Order(BaseModel):
+    fullName: str
+    email: EmailStr
+    address: str
+    phone: str
+    totalAmount: float
+    items: List[OrderItem]
+
+class OrderResponse(BaseModel):
+    success: bool
+    message: str
+    orderId: Optional[str] = None
+
 
 # Utility Functions
 def hash_password(password: str) -> str:
