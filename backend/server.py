@@ -171,6 +171,123 @@ async def save_user(user_data: dict) -> bool:
         logging.error(f"Error saving user: {e}")
         return False
 
+async def save_order(order_data: dict) -> bool:
+    """Save order to database"""
+    try:
+        result = await db.orders.insert_one(order_data)
+        return result.inserted_id is not None
+    except Exception as e:
+        logging.error(f"Error saving order: {e}")
+        return False
+
+def send_order_email(order: Order, order_id: str) -> bool:
+    """Send order notification email"""
+    try:
+        # Email configuration - use environment variables in production
+        smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+        smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+        smtp_username = os.environ.get('SMTP_USERNAME', '')
+        smtp_password = os.environ.get('SMTP_PASSWORD', '')
+        
+        if not smtp_username or not smtp_password:
+            logging.warning("SMTP credentials not configured, skipping email")
+            return True  # Don't fail the order if email fails
+        
+        # Create email message
+        msg = MimeMultipart()
+        msg['From'] = smtp_username
+        msg['To'] = 'gesnusge@gmail.com'
+        msg['Subject'] = f'New GeSnus Order #{order_id}'
+        
+        # Calculate delivery fee and total
+        delivery_fee = 5.0
+        final_total = order.totalAmount + delivery_fee
+        
+        # Create HTML email body
+        items_html = ""
+        for item in order.items:
+            items_html += f"""
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{item.name}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">{item.quantity}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">₾{item.price:.2f}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">₾{(item.price * item.quantity):.2f}</td>
+                </tr>
+            """
+        
+        html_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #8B4513;">New GeSnus Order</h2>
+            
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Order Details</h3>
+                <p><strong>Order ID:</strong> {order_id}</p>
+                <p><strong>Date:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
+            </div>
+            
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Customer Information</h3>
+                <p><strong>Name:</strong> {order.fullName}</p>
+                <p><strong>Email:</strong> {order.email}</p>
+                <p><strong>Phone:</strong> {order.phone}</p>
+                <p><strong>Address:</strong> {order.address}</p>
+            </div>
+            
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Order Items</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #8B4513; color: white;">
+                            <th style="padding: 10px; text-align: left;">Product</th>
+                            <th style="padding: 10px; text-align: center;">Qty</th>
+                            <th style="padding: 10px; text-align: right;">Price</th>
+                            <th style="padding: 10px; text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items_html}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="padding: 8px; text-align: right; font-weight: bold;">Subtotal:</td>
+                            <td style="padding: 8px; text-align: right; font-weight: bold;">₾{order.totalAmount:.2f}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="padding: 8px; text-align: right; font-weight: bold;">Delivery:</td>
+                            <td style="padding: 8px; text-align: right; font-weight: bold;">₾{delivery_fee:.2f}</td>
+                        </tr>
+                        <tr style="background-color: #8B4513; color: white;">
+                            <td colspan="3" style="padding: 10px; text-align: right; font-weight: bold;">TOTAL:</td>
+                            <td style="padding: 10px; text-align: right; font-weight: bold;">₾{final_total:.2f}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>Next Steps:</strong></p>
+                <p style="margin: 5px 0 0 0;">Customer will make bank transfer and contact you for delivery coordination.</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg.attach(MimeText(html_body, 'html'))
+        
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.send_message(msg)
+        
+        logging.info(f"Order notification email sent for order {order_id}")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Failed to send order email: {e}")
+        return False
+
 
 # Basic endpoints
 @api_router.get("/")
