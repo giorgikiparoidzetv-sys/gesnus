@@ -67,6 +67,7 @@ const App = () => {
                       <Route path="/game" element={<GamePage />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/reset-password" element={<ResetPasswordPage />} />
+                      <Route path="/confirm-email" element={<ConfirmEmailPage />} />
                       <Route
                         path="/dashboard"
                         element={
