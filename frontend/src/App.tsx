@@ -70,6 +70,8 @@ const App = () => {
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/reset-password" element={<ResetPasswordPage />} />
                       <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+                      <Route path="/payment-info" element={<PaymentInfoPage />} />
+                      <Route path="/bank-info" element={<BankInfoPage />} />
                       <Route
                         path="/dashboard"
                         element={
