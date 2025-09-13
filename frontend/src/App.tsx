@@ -19,6 +19,7 @@ import GamePage from "@/pages/GamePage";
 import NotFound from "./pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
+import ConfirmEmailPage from "@/pages/ConfirmEmailPage";
 import DashboardPage from "@/pages/DashboardPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/hooks/useCart.tsx";
