@@ -13,6 +13,10 @@ from datetime import datetime, timedelta
 import jwt
 import hashlib
 import secrets
+import smtplib
+from email.message import EmailMessage
+from email.mime.text import MimeText
+from email.mime.multipart import MimeMultipart
 
 
 ROOT_DIR = Path(__file__).parent
