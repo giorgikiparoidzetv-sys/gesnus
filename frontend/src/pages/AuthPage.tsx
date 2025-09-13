@@ -107,8 +107,8 @@ const AuthPage = () => {
 
       if (data.user) {
         toast({ title: 'Welcome back', description: data.user.email || 'Signed in successfully.' });
-        // Full refresh avoids limbo states
-        window.location.href = '/dashboard';
+        // Redirect to home page instead of dashboard
+        window.location.href = '/';
       }
     } catch (err: any) {
       const message = err?.message || 'Invalid credentials or email not verified.';
