@@ -700,6 +700,11 @@ async def get_admin_stats(admin_email: str = Query(..., description="Admin email
         # Get recent orders (last 10)
         recent_orders = await db.orders.find().sort("created_at", -1).limit(10).to_list(10)
         
+        # Convert ObjectIds to strings for JSON serialization
+        for order in recent_orders:
+            if '_id' in order:
+                order['_id'] = str(order['_id'])
+        
         return {
             "total_orders": total_orders,
             "status_breakdown": status_stats,
