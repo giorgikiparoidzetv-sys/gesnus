@@ -453,7 +453,8 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
         'email': current_user['email'],
         'full_name': current_user['full_name'],
         'is_confirmed': current_user.get('is_confirmed', False),
-        'created_at': current_user['created_at']
+        'created_at': current_user['created_at'],
+        'is_admin': is_admin_email(current_user['email'])
     }
 
 
