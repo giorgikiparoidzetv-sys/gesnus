@@ -30,6 +30,13 @@ const Header = () => {
   const navigate = useNavigate();
   const cartRef = useRef<HTMLDivElement>(null);
 
+  // Check if user is admin
+  const adminEmails = [
+    'phirosmanashvilinika2005@gmail.com',
+    'alexxanderson28@gmail.com'
+  ];
+  const isAdmin = user?.email && adminEmails.includes(user.email.toLowerCase());
+
   const navLinks = [
     { name: t("nav.home"), path: "/" },
     { name: t("nav.shop"), path: "/shop" },
