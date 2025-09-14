@@ -151,6 +151,22 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     
     return user
 
+async def get_current_admin_user(current_user: dict = Depends(get_current_user)) -> dict:
+    """Get current user and verify admin access"""
+    user_email = current_user.get('email', '').lower()
+    
+    if user_email not in [email.lower() for email in ADMIN_EMAILS]:
+        raise HTTPException(
+            status_code=403, 
+            detail="Access denied. Admin privileges required."
+        )
+    
+    return current_user
+
+def is_admin_email(email: str) -> bool:
+    """Check if email is in admin list"""
+    return email.lower() in [admin_email.lower() for admin_email in ADMIN_EMAILS]
+
 async def get_user_by_email(email: str) -> Optional[dict]:
     """Get user by email from database"""
     return await db.users.find_one({"email": email})
