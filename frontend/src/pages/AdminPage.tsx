@@ -124,16 +124,17 @@ const AdminPage = () => {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
       
-      const session = await import('@/integrations/supabase/client').then(module => 
-        module.supabase.auth.getSession()
-      );
+      if (!user?.email) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to update order status",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      const response = await fetch(`${backendUrl}/api/admin/orders/${orderId}?status=${newStatus}`, {
+      const response = await fetch(`${backendUrl}/api/admin/orders/${orderId}?status=${newStatus}&admin_email=${encodeURIComponent(user.email)}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${session.data.session?.access_token}`,
-          'Content-Type': 'application/json',
-        },
       });
 
       if (!response.ok) {
