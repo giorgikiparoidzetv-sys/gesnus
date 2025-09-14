@@ -514,6 +514,138 @@ async def get_orders(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to fetch orders")
 
 
+# ===============================
+# ADMIN ENDPOINTS
+# ===============================
+
+@api_router.get("/admin/orders", response_model=List[dict])
+async def get_all_orders_admin(admin_user: dict = Depends(get_current_admin_user)):
+    """Get all orders for admin panel"""
+    try:
+        orders = await db.orders.find().sort("created_at", -1).to_list(1000)
+        
+        # Add calculated delivery fee and final total to each order
+        for order in orders:
+            subtotal = order.get('totalAmount', 0)
+            delivery_fee = 5.0  # Fixed delivery fee
+            order['delivery_fee'] = delivery_fee
+            order['final_total'] = subtotal + delivery_fee
+        
+        return orders
+    except Exception as e:
+        logging.error(f"Error fetching orders for admin: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orders")
+
+@api_router.put("/admin/orders/{order_id}")
+async def update_order_status(
+    order_id: str, 
+    status: str = Query(..., description="New order status"),
+    admin_user: dict = Depends(get_current_admin_user)
+):
+    """Update order status (admin only)"""
+    try:
+        # Valid statuses
+        valid_statuses = ["pending", "processing", "shipped", "delivered", "cancelled", "completed"]
+        
+        if status not in valid_statuses:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
+            )
+        
+        # Update order status
+        result = await db.orders.update_one(
+            {"id": order_id},
+            {
+                "$set": {
+                    "status": status,
+                    "updated_at": datetime.utcnow(),
+                    "updated_by": admin_user['email']
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        return {
+            "success": True,
+            "message": f"Order {order_id} status updated to {status}",
+            "order_id": order_id,
+            "status": status
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error updating order status: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update order status")
+
+@api_router.get("/admin/orders/{order_id}")
+async def get_order_details_admin(
+    order_id: str,
+    admin_user: dict = Depends(get_current_admin_user)
+):
+    """Get detailed order information (admin only)"""
+    try:
+        order = await db.orders.find_one({"id": order_id})
+        
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        # Add calculated delivery fee and final total
+        subtotal = order.get('totalAmount', 0)
+        delivery_fee = 5.0
+        order['delivery_fee'] = delivery_fee
+        order['final_total'] = subtotal + delivery_fee
+        
+        return order
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching order details: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch order details")
+
+@api_router.get("/admin/stats")
+async def get_admin_stats(admin_user: dict = Depends(get_current_admin_user)):
+    """Get dashboard statistics for admin"""
+    try:
+        # Count orders by status
+        pipeline = [
+            {
+                "$group": {
+                    "_id": "$status",
+                    "count": {"$sum": 1},
+                    "total_amount": {"$sum": "$totalAmount"}
+                }
+            }
+        ]
+        
+        status_stats = await db.orders.aggregate(pipeline).to_list(100)
+        
+        # Get total orders count
+        total_orders = await db.orders.count_documents({})
+        
+        # Get recent orders (last 10)
+        recent_orders = await db.orders.find().sort("created_at", -1).limit(10).to_list(10)
+        
+        return {
+            "total_orders": total_orders,
+            "status_breakdown": status_stats,
+            "recent_orders": recent_orders
+        }
+    
+    except Exception as e:
+        logging.error(f"Error fetching admin stats: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch statistics")
+
+
+# ===============================
+# END ADMIN ENDPOINTS
+# ===============================
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
