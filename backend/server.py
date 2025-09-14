@@ -423,12 +423,13 @@ async def login_user(login_data: LoginRequest):
         # Create JWT token
         token = create_jwt_token(user)
         
-        # Remove sensitive information
+        # Remove sensitive information and add admin status
         user_safe = {
             'id': user['id'],
             'email': user['email'],
             'full_name': user['full_name'],
-            'created_at': user['created_at']
+            'created_at': user['created_at'],
+            'is_admin': is_admin_email(user['email'])
         }
         
         return LoginResponse(
