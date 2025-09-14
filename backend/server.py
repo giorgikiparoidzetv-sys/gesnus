@@ -651,6 +651,10 @@ async def get_order_details_admin(
         if not order:
             raise HTTPException(status_code=404, detail="Order not found")
         
+        # Convert ObjectId to string for JSON serialization
+        if '_id' in order:
+            order['_id'] = str(order['_id'])
+        
         # Add calculated delivery fee and final total
         subtotal = order.get('totalAmount', 0)
         delivery_fee = 5.0
