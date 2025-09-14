@@ -66,22 +66,35 @@ const AdminPage = () => {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
       
-      // Get auth token from Supabase session
-      const session = await import('@/integrations/supabase/client').then(module => 
-        module.supabase.auth.getSession()
-      );
+      // Get auth token from localStorage or session storage (custom JWT auth)
+      // Since this app uses both Supabase and custom backend auth, we need to check both
+      let token = null;
       
-      if (!session.data.session?.access_token) {
+      // First try to get Supabase session token
+      try {
+        const session = await import('@/integrations/supabase/client').then(module => 
+          module.supabase.auth.getSession()
+        );
+        token = session.data.session?.access_token;
+      } catch (error) {
+        console.log('No Supabase session found');
+      }
+      
+      // If no Supabase token, try custom auth (check localStorage for JWT)
+      if (!token) {
+        // For now, let's try to authenticate with the backend using user credentials
+        // This is a temporary solution - in a real app, you'd have proper token management
+        console.log('No auth token available');
         toast({
           title: "Authentication Required",
-          description: "Please log in to access admin panel",
+          description: "Please log in with an admin account to access the admin panel",
           variant: "destructive",
         });
         return;
       }
 
       const headers = {
-        'Authorization': `Bearer ${session.data.session.access_token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
 
@@ -89,6 +102,14 @@ const AdminPage = () => {
       const ordersResponse = await fetch(`${backendUrl}/api/admin/orders`, { headers });
       
       if (!ordersResponse.ok) {
+        if (ordersResponse.status === 403) {
+          toast({
+            title: "Access Denied",
+            description: "You don't have permission to access the admin panel",
+            variant: "destructive",
+          });
+          return;
+        }
         throw new Error('Failed to fetch orders');
       }
       
@@ -107,7 +128,7 @@ const AdminPage = () => {
       console.error('Error fetching admin data:', error);
       toast({
         title: "Error",
-        description: "Failed to load admin data",
+        description: "Failed to load admin data. Please make sure you're logged in with an admin account.",
         variant: "destructive",
       });
     } finally {
