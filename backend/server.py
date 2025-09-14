@@ -15,8 +15,8 @@ import hashlib
 import secrets
 import smtplib
 from email.message import EmailMessage
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 ROOT_DIR = Path(__file__).parent
@@ -194,7 +194,7 @@ def send_order_email(order: Order, order_id: str) -> bool:
             return True  # Don't fail the order if email fails
         
         # Create email message
-        msg = MimeMultipart()
+        msg = MIMEMultipart()
         msg['From'] = smtp_username
         msg['To'] = 'gesnusge@gmail.com'
         msg['Subject'] = f'New GeSnus Order #{order_id}'
@@ -273,7 +273,7 @@ def send_order_email(order: Order, order_id: str) -> bool:
         </html>
         """
         
-        msg.attach(MimeText(html_body, 'html'))
+        msg.attach(MIMEText(html_body, 'html'))
         
         # Send email
         with smtplib.SMTP(smtp_server, smtp_port) as server:
