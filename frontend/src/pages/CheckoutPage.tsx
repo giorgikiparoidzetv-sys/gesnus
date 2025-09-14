@@ -112,7 +112,7 @@ const CheckoutPage = () => {
       };
 
       // Get backend URL from environment
-      const backendUrl = import.meta.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
       
       // Submit order to backend
       const response = await fetch(`${backendUrl}/api/order`, {
