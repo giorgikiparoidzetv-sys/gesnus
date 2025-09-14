@@ -559,8 +559,13 @@ async def get_all_orders_admin(admin_email: str = Query(..., description="Admin 
         
         orders = await db.orders.find().sort("created_at", -1).to_list(1000)
         
-        # Add calculated delivery fee and final total to each order
+        # Convert MongoDB documents for JSON serialization
         for order in orders:
+            # Convert ObjectId to string
+            if '_id' in order:
+                order['_id'] = str(order['_id'])
+            
+            # Add calculated delivery fee and final total
             subtotal = order.get('totalAmount', 0)
             delivery_fee = 5.0  # Fixed delivery fee
             order['delivery_fee'] = delivery_fee
