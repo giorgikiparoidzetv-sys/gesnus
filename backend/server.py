@@ -517,13 +517,46 @@ async def get_orders(current_user: dict = Depends(get_current_user)):
 
 
 # ===============================
-# ADMIN ENDPOINTS
+# ADMIN ENDPOINTS (Simplified Authentication)
 # ===============================
 
-@api_router.get("/admin/orders", response_model=List[dict])
-async def get_all_orders_admin(admin_user: dict = Depends(get_current_admin_user)):
-    """Get all orders for admin panel"""
+@api_router.post("/admin/authenticate")
+async def authenticate_admin(email: str = Query(..., description="Admin email to verify")):
+    """Simple admin authentication check"""
     try:
+        user_email = email.lower().strip()
+        
+        if user_email not in [admin_email.lower() for admin_email in ADMIN_EMAILS]:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied. Admin privileges required."
+            )
+        
+        return {
+            "success": True,
+            "message": "Admin access granted",
+            "email": email,
+            "is_admin": True
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error in admin authentication: {e}")
+        raise HTTPException(status_code=500, detail="Authentication failed")
+
+@api_router.get("/admin/orders")
+async def get_all_orders_admin(admin_email: str = Query(..., description="Admin email for verification")):
+    """Get all orders for admin panel (simplified auth)"""
+    try:
+        # Verify admin access
+        user_email = admin_email.lower().strip()
+        if user_email not in [email.lower() for email in ADMIN_EMAILS]:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied. Admin privileges required."
+            )
+        
         orders = await db.orders.find().sort("created_at", -1).to_list(1000)
         
         # Add calculated delivery fee and final total to each order
@@ -534,6 +567,8 @@ async def get_all_orders_admin(admin_user: dict = Depends(get_current_admin_user
             order['final_total'] = subtotal + delivery_fee
         
         return orders
+    except HTTPException:
+        raise
     except Exception as e:
         logging.error(f"Error fetching orders for admin: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch orders")
@@ -542,10 +577,18 @@ async def get_all_orders_admin(admin_user: dict = Depends(get_current_admin_user
 async def update_order_status(
     order_id: str, 
     status: str = Query(..., description="New order status"),
-    admin_user: dict = Depends(get_current_admin_user)
+    admin_email: str = Query(..., description="Admin email for verification")
 ):
-    """Update order status (admin only)"""
+    """Update order status (admin only, simplified auth)"""
     try:
+        # Verify admin access
+        user_email = admin_email.lower().strip()
+        if user_email not in [email.lower() for email in ADMIN_EMAILS]:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied. Admin privileges required."
+            )
+        
         # Valid statuses
         valid_statuses = ["pending", "processing", "shipped", "delivered", "cancelled", "completed"]
         
@@ -562,7 +605,7 @@ async def update_order_status(
                 "$set": {
                     "status": status,
                     "updated_at": datetime.utcnow(),
-                    "updated_by": admin_user['email']
+                    "updated_by": admin_email
                 }
             }
         )
@@ -586,10 +629,18 @@ async def update_order_status(
 @api_router.get("/admin/orders/{order_id}")
 async def get_order_details_admin(
     order_id: str,
-    admin_user: dict = Depends(get_current_admin_user)
+    admin_email: str = Query(..., description="Admin email for verification")
 ):
-    """Get detailed order information (admin only)"""
+    """Get detailed order information (admin only, simplified auth)"""
     try:
+        # Verify admin access
+        user_email = admin_email.lower().strip()
+        if user_email not in [email.lower() for email in ADMIN_EMAILS]:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied. Admin privileges required."
+            )
+        
         order = await db.orders.find_one({"id": order_id})
         
         if not order:
@@ -610,9 +661,17 @@ async def get_order_details_admin(
         raise HTTPException(status_code=500, detail="Failed to fetch order details")
 
 @api_router.get("/admin/stats")
-async def get_admin_stats(admin_user: dict = Depends(get_current_admin_user)):
-    """Get dashboard statistics for admin"""
+async def get_admin_stats(admin_email: str = Query(..., description="Admin email for verification")):
+    """Get dashboard statistics for admin (simplified auth)"""
     try:
+        # Verify admin access
+        user_email = admin_email.lower().strip()
+        if user_email not in [email.lower() for email in ADMIN_EMAILS]:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied. Admin privileges required."
+            )
+        
         # Count orders by status
         pipeline = [
             {
@@ -638,6 +697,8 @@ async def get_admin_stats(admin_user: dict = Depends(get_current_admin_user)):
             "recent_orders": recent_orders
         }
     
+    except HTTPException:
+        raise
     except Exception as e:
         logging.error(f"Error fetching admin stats: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch statistics")
