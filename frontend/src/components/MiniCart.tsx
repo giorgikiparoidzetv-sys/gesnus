@@ -95,16 +95,11 @@ const MiniCart = ({ isOpen, onClose }: MiniCartProps) => {
                     {t("cart.mini.view_cart")}
                   </Button>
                 </NavLink>
-                <Button 
-                  className="w-full"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    showComingSoon();
-                    onClose();
-                  }}
-                >
-                  {t("cart.checkout")}
-                </Button>
+                <NavLink to="/checkout" onClick={onClose} className="block">
+                  <Button className="w-full">
+                    {t("cart.checkout")}
+                  </Button>
+                </NavLink>
               </div>
             </div>
           </>
