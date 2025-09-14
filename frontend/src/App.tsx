@@ -23,6 +23,7 @@ import ConfirmEmailPage from "@/pages/ConfirmEmailPage";
 import PaymentInfoPage from "@/pages/PaymentInfoPage";
 import BankInfoPage from "@/pages/BankInfoPage";
 import DashboardPage from "@/pages/DashboardPage";
+import AdminPage from "@/pages/AdminPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/hooks/useCart.tsx";
 import { TranslationProvider } from "@/hooks/useTranslation.tsx";
